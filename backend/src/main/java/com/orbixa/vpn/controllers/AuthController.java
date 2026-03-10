@@ -36,11 +36,19 @@ public class AuthController {
 
     @GetMapping("/profile")
     public ResponseEntity<?> profile(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null
+                || !(authentication.getPrincipal() instanceof com.orbixa.vpn.security.UserDetailsImpl)) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized - Invalid or missing token"));
+        }
         com.orbixa.vpn.security.UserDetailsImpl userDetails = (com.orbixa.vpn.security.UserDetailsImpl) authentication
                 .getPrincipal();
         return ResponseEntity.ok(Map.of(
                 "email", userDetails.getUsername(),
                 "uuid", userDetails.getUuid(),
-                "id", userDetails.getId()));
+                "id", userDetails.getId(),
+                "role", userDetails.getAuthorities().stream()
+                        .map(r -> r.getAuthority())
+                        .findFirst()
+                        .orElse("ROLE_USER")));
     }
 }
