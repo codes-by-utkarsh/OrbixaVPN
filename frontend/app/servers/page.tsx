@@ -13,7 +13,7 @@ export default function Servers() {
             return;
         }
 
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
         fetch(`${api_url}/vpn/servers`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
