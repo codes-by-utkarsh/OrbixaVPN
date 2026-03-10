@@ -48,6 +48,7 @@ public class AuthService {
         user.setCreatedAt(Instant.now());
         user.setSubscriptionStatus("FREE");
         user.setActive(true);
+        user.setRole("ROLE_USER");
 
         userRepository.save(user);
     }
