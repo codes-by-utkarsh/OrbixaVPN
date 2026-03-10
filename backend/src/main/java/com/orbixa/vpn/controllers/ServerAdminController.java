@@ -29,11 +29,13 @@ public class ServerAdminController {
 
     @PostMapping("/server/add")
     public ResponseEntity<?> addServer(@RequestBody Server server) {
+        System.out.println("Adding server: " + server.getName() + " domain: " + server.getDomain());
         if (server.getStatus() == null) {
             server.setStatus("online");
         }
-        serverRepository.save(server);
-        return ResponseEntity.ok(Map.of("message", "Server added successfully", "serverId", server.getId()));
+        Server saved = serverRepository.save(server);
+        System.out.println("Server saved with ID: " + saved.getId());
+        return ResponseEntity.ok(Map.of("message", "Server added successfully", "serverId", saved.getId()));
     }
 
     @PostMapping("/server/remove")

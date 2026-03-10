@@ -20,7 +20,11 @@ export default function AdminDashboard() {
             if (usersRes.ok) setUsers(await usersRes.json());
 
             const serversRes = await fetch(`${api_url}/admin/servers`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (serversRes.ok) setServers(await serversRes.json());
+            if (serversRes.ok) {
+                const data = await serversRes.json();
+                console.log("Servers found:", data);
+                setServers(data);
+            }
         } catch (e) {
             console.error("Failed to fetch admin data", e);
         }
@@ -36,14 +40,20 @@ export default function AdminDashboard() {
         const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
 
         try {
-            await fetch(`${api_url}/admin/server/add`, {
+            const res = await fetch(`${api_url}/admin/server/add`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(newServer)
             });
-            setIsAdding(false);
-            fetchAdminData();
-        } catch (e) {
+            if (res.ok) {
+                setIsAdding(false);
+                fetchAdminData();
+            } else {
+                const err = await res.json();
+                alert("Error adding server: " + (err.message || res.statusText));
+            }
+        } catch (e: any) {
+            alert("Network Error: " + e.message);
             console.error(e);
         }
     };
