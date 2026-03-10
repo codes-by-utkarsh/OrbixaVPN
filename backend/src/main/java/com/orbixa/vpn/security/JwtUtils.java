@@ -1,6 +1,7 @@
 package com.orbixa.vpn.security;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -26,6 +26,7 @@ public class JwtUtils {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
+                .json(new JacksonSerializer<>()) // Explicitly set serializer to bypass ServiceLoader issues
                 .subject(userPrincipal.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
