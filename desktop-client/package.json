@@ -1,0 +1,48 @@
+{
+    "name": "orbixa-desktop",
+    "private": true,
+    "version": "1.0.0",
+    "main": "electron-main.cjs",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "tauri": "tauri",
+        "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:1420 && electron .\"",
+        "electron:build": "vite build && electron-builder --win"
+    },
+    "build": {
+        "appId": "com.orbixa.vpn",
+        "win": {
+            "target": "nsis"
+        },
+        "files": [
+            "dist/**/*",
+            "electron-main.cjs",
+            "preload.cjs"
+        ]
+    },
+    "dependencies": {
+        "@tauri-apps/api": "^1.5.0",
+        "lucide-react": "^0.344.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@tauri-apps/cli": "^1.5.0",
+        "@types/react": "^19.2.14",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^4.2.0",
+        "autoprefixer": "^10.4.27",
+        "concurrently": "^9.2.1",
+        "cross-env": "^10.1.0",
+        "electron": "^40.8.0",
+        "electron-builder": "^26.8.1",
+        "postcss": "^8.5.8",
+        "tailwindcss": "^3.4.1",
+        "typescript": "^5.0.0",
+        "vite": "^5.0.0",
+        "wait-on": "^9.0.4"
+    }
+}
