@@ -13,7 +13,7 @@ export default function AdminDashboard() {
         const token = localStorage.getItem('orbixa_token');
         if (!token) return;
 
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
 
         try {
             const usersRes = await fetch(`${api_url}/admin/users`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -33,7 +33,7 @@ export default function AdminDashboard() {
     const handleAddServer = async (e: React.FormEvent) => {
         e.preventDefault();
         const token = localStorage.getItem('orbixa_token');
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
 
         try {
             await fetch(`${api_url}/admin/server/add`, {
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
 
     const handleRemoveServer = async (id: string) => {
         const token = localStorage.getItem('orbixa_token');
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
 
         try {
             await fetch(`${api_url}/admin/server/remove`, {

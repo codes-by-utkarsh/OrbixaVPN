@@ -17,7 +17,7 @@ export default function App() {
     const [selectedServer, setSelectedServer] = useState('');
     const [usage, setUsage] = useState({ down: "0 MB", up: "0 MB", ping: "-" });
 
-    const API_URL = 'http://localhost:8080/api';
+    const API_URL = 'https://orbixavpn.onrender.com/api';
 
     useEffect(() => {
         if (token) {

@@ -16,7 +16,7 @@ export default function Register() {
         setError('');
 
         try {
-            const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+            const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
             const response = await fetch(`${api_url}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
