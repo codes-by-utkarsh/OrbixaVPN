@@ -1,9 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LayoutGrid, Plus, Trash2, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { LayoutGrid, Plus, Trash2, Users, Loader2 } from 'lucide-react';
 
 export default function AdminDashboard() {
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
     const [users, setUsers] = useState<any[]>([]);
     const [servers, setServers] = useState<any[]>([]);
     const [isAdding, setIsAdding] = useState(false);
@@ -30,8 +33,40 @@ export default function AdminDashboard() {
         }
     };
 
+    const checkAdmin = async () => {
+        const token = localStorage.getItem('orbixa_token');
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
+
+        try {
+            const profileRes = await fetch(`${api_url}/auth/profile`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (profileRes.ok) {
+                const profile = await profileRes.json();
+                if (profile.role !== 'ROLE_ADMIN') {
+                    alert('Access Denied: Admin authorization required.');
+                    router.push('/dashboard');
+                } else {
+                    setIsLoading(false);
+                    fetchAdminData();
+                }
+            } else {
+                router.push('/login');
+            }
+        } catch (e) {
+            console.error("Auth check failed", e);
+            router.push('/login');
+        }
+    };
+
     useEffect(() => {
-        fetchAdminData();
+        checkAdmin();
     }, []);
 
     const handleAddServer = async (e: React.FormEvent) => {
@@ -74,13 +109,23 @@ export default function AdminDashboard() {
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+                <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                <p className="text-gray-400 font-medium">Verifying Admin Access...</p>
+            </div>
+        );
+    }
+
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 animate-in fade-in duration-500">
             <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
                 <LayoutGrid className="text-primary" /> Admin Panel
             </h1>
-
+            {/* ... rest of the content ... */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                {/* Users Section */}
                 <div className="bg-card border border-gray-800 rounded-xl p-6">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-bold flex items-center gap-2">
@@ -103,6 +148,7 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
+                {/* Servers Section */}
                 <div className="bg-card border border-gray-800 rounded-xl p-6">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-bold flex items-center gap-2">
