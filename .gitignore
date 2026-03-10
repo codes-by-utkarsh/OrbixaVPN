@@ -56,7 +56,7 @@ temp/
 *.tmp
 
 # Models & Weights
-models/
+# models/
 *.pth
 *.pt
 *.onnx
