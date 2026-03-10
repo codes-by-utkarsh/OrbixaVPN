@@ -49,7 +49,7 @@ public class ServerAdminController {
     @GetMapping("/users")
     public ResponseEntity<?> getUsers() {
         List<Map<String, Object>> userDtos = userRepository.findAll().stream().map(user -> {
-            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            Map<String, Object> map = new java.util.HashMap<>();
             map.put("id", user.getId());
             map.put("email", user.getEmail());
             map.put("active", user.isActive());
