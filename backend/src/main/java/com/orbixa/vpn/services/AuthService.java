@@ -29,20 +29,29 @@ public class AuthService {
     JwtUtils jwtUtils;
 
     public String authenticateUser(String email, String password) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password));
+        String normalizedEmail = email.toLowerCase().trim();
+        System.out.println("Authenticating user: " + normalizedEmail);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(normalizedEmail, password));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtUtils.generateJwtToken(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("Authentication successful for: " + normalizedEmail);
+            return jwtUtils.generateJwtToken(authentication);
+        } catch (Exception e) {
+            System.out.println("Authentication failed for: " + normalizedEmail + " Reason: " + e.getMessage());
+            throw e;
+        }
     }
 
     public void registerUser(String email, String password) {
-        if (userRepository.existsByEmail(email)) {
+        String normalizedEmail = email.toLowerCase().trim();
+        if (userRepository.existsByEmail(normalizedEmail)) {
             throw new RuntimeException("Error: Email is already in use!");
         }
 
         User user = new User();
-        user.setEmail(email);
+        user.setEmail(normalizedEmail);
         user.setPasswordHash(passwordEncoder.encode(password));
         user.setUuid(UUID.randomUUID().toString());
         user.setCreatedAt(Instant.now());
@@ -51,5 +60,6 @@ public class AuthService {
         user.setRole("ROLE_USER");
 
         userRepository.save(user);
+        System.out.println("User registered: " + normalizedEmail);
     }
 }

@@ -29,7 +29,8 @@ public class AuthController {
             String jwt = authService.authenticateUser(creds.get("email"), creds.get("password"));
             return ResponseEntity.ok(Map.of("message", "Login successful", "token", jwt));
         } catch (Exception e) {
-            return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
+            e.printStackTrace();
+            return ResponseEntity.status(401).body(Map.of("message", "Login failed: " + e.getMessage()));
         }
     }
 
