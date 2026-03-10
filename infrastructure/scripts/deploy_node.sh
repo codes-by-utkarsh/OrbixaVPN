@@ -107,6 +107,11 @@ echo -e "\n${GREEN}[6/8] Restarting Xray Service...${NC}"
 systemctl restart xray
 systemctl enable xray
 
+echo -e "\n${GREEN}[7/8] Installing add_user automation utility...${NC}"
+curl -s -O https://raw.githubusercontent.com/codes-by-utkarsh/OrbixaVPN/main/infrastructure/scripts/add_user.sh
+chmod +x add_user.sh
+mv add_user.sh /usr/local/bin/
+
 echo -e "\n${BLUE}=================================================${NC}"
 echo -e "${GREEN}Orbixa Node Successfully Deployed!${NC}"
 echo -e "${BLUE}=================================================${NC}"
@@ -116,4 +121,6 @@ echo -e ""
 echo -e "To add this node to the Orbixa Admin Panel, use the following payload values:"
 echo -e "Domain: $NODE_DOMAIN"
 echo -e "Port: 443"
+echo -e "================================================="
+echo -e "${BLUE}Automation Utility installed at /usr/local/bin/add_user.sh${NC}"
 echo -e "================================================="
