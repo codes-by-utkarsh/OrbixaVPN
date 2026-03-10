@@ -25,8 +25,10 @@ export default function AdminDashboard() {
             const serversRes = await fetch(`${api_url}/admin/servers`, { headers: { 'Authorization': `Bearer ${token}` } });
             if (serversRes.ok) {
                 const data = await serversRes.json();
-                console.log("Servers found:", data);
                 setServers(data);
+            } else {
+                const err = await serversRes.json();
+                alert("Failed to fetch servers: " + (err.message || serversRes.statusText));
             }
         } catch (e) {
             console.error("Failed to fetch admin data", e);
