@@ -49,9 +49,9 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                     if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
                     sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
                     
-                    # One single, powerful jq command to clean ALL flows and add the user
+                    # Master command: Wipe all "flow" entries recursively AND add the user in one pass
                     sudo jq --arg uuid "${userUuid}" '
-                        (.inbounds[0].settings.clients[] |= del(.flow)) | 
+                        del(.. | .flow?) | 
                         if .inbounds[0].settings.clients | any(.id == $uuid) 
                         then . 
                         else .inbounds[0].settings.clients += [{"id": $uuid}] 
@@ -59,7 +59,6 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                     ' /usr/local/etc/xray/config.json > /tmp/xray.json && \
                     sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
                     sudo systemctl restart xray
-                    sudo jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray.json && sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && sudo systemctl restart xray
                 `;
 
                 conn.exec(command, (err, stream) => {
