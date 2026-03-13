@@ -226,8 +226,8 @@ export default function Dashboard() {
                         </div>
 
                         <div className="grid grid-cols-1 gap-4">
-                            {servers.map(server => (
-                                <div key={server.id} className="premium-border p-6 bg-surface/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-surface/40 transition-all group">
+                            {servers.map((server: any) => (
+                                <div key={server._id} className="premium-border p-6 bg-surface/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-surface/40 transition-all group">
                                     <div className="flex items-center gap-5 w-full md:w-auto">
                                         <div className="w-16 h-16 rounded-2xl bg-background border border-border flex items-center justify-center group-hover:border-primary/50 transition-all">
                                             <MapPin size={32} className="text-gray-500 group-hover:text-primary" />
@@ -251,7 +251,7 @@ export default function Dashboard() {
                                             <span className="text-white font-bold">{server.load}</span>
                                         </div>
                                         <button
-                                            onClick={() => handleConnect(server.id, server.location)}
+                                            onClick={() => handleConnect(server._id, server.location)}
                                             disabled={loading}
                                             className="btn-primary py-3 px-8 text-sm whitespace-nowrap hover:shadow-glow"
                                         >
