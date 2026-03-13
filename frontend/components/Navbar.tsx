@@ -19,9 +19,13 @@ export default function Navbar() {
     return (
         <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-background/80 backdrop-blur-lg border-b border-border py-4' : 'bg-transparent py-6'}`}>
             <div className="container mx-auto px-6 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="bg-primary p-2 rounded-lg group-hover:rotate-12 transition-transform">
-                        <Shield className="text-white" size={24} />
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="relative w-10 h-10 overflow-hidden rounded-xl border border-primary/20 group-hover:scale-110 transition-transform duration-300">
+                        <img
+                            src="/logo.png"
+                            alt="Orbixa Logo"
+                            className="w-full h-full object-cover"
+                        />
                     </div>
                     <span className="text-2xl font-bold tracking-tight">Orbixa<span className="text-primary text-gradient">VPN</span></span>
                 </Link>

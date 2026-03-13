@@ -29,8 +29,8 @@ export default function LoginPage() {
             <div className="container mx-auto px-6 relative z-10">
                 <div className="max-w-md mx-auto">
                     <div className="text-center mb-10">
-                        <div className="inline-flex p-3 bg-primary/10 rounded-2xl border border-primary/20 mb-6">
-                            <Shield className="text-primary" size={32} />
+                        <div className="inline-flex p-1 bg-primary/10 rounded-2xl border border-primary/20 mb-6 overflow-hidden">
+                            <img src="/logo.png" alt="Orbixa Logo" className="w-16 h-16 object-cover rounded-xl" />
                         </div>
                         <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
                         <p className="text-gray-400">Securely sign in to your Orbixa account</p>

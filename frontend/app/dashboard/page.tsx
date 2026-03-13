@@ -213,8 +213,8 @@ export default function Dashboard() {
 
                             {!selectedConfig ? (
                                 <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
-                                    <div className="w-20 h-20 bg-surface border border-border rounded-full flex items-center justify-center">
-                                        <Shield className="text-gray-500" size={32} />
+                                    <div className="w-20 h-20 bg-surface border border-border rounded-2xl flex items-center justify-center overflow-hidden p-2">
+                                        <img src="/logo.png" alt="Orbixa" className="w-full h-full object-cover rounded-lg opacity-50" />
                                     </div>
                                     <div>
                                         <h4 className="text-xl font-bold mb-2">Ready to Secure</h4>

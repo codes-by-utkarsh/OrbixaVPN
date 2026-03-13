@@ -188,9 +188,9 @@ export default function Home() {
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-10">
                         <div className="flex flex-col items-center md:items-start gap-4">
-                            <div className="flex items-center gap-2">
-                                <Shield className="text-primary" />
-                                <span className="text-2xl font-bold tracking-tight">Orbixa<span className="text-primary">VPN</span></span>
+                            <div className="flex items-center gap-3">
+                                <img src="/logo.png" alt="Orbixa Logo" className="w-8 h-8 object-cover rounded-lg border border-primary/20" />
+                                <span className="text-2xl font-bold tracking-tight">Orbixa<span className="text-primary text-gradient">VPN</span></span>
                             </div>
                             <p className="text-gray-500 text-sm max-w-xs text-center md:text-left">
                                 High-performance, privacy-first internet tunneling for the modern era.
