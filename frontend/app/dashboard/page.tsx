@@ -242,19 +242,21 @@ export default function Dashboard() {
                         <div className="bg-primary p-1 rounded-3xl shadow-glow">
                             <div className="bg-surface rounded-[calc(1.5rem-2px)] p-8 text-center space-y-6">
                                 <div className="inline-flex p-4 bg-primary/10 rounded-2xl">
-                                    <HardDrive className="text-primary" size={40} />
+                                    <Shield className="text-primary" size={40} />
                                 </div>
                                 <div className="text-center">
-                                    <h4 className="text-2xl font-bold mb-2">Desktop Client</h4>
-                                    <p className="text-gray-500 text-sm">Download for Windows executable for maximum performance.</p>
+                                    <h4 className="text-2xl font-bold mb-2">Recommended Client</h4>
+                                    <p className="text-gray-500 text-sm">Download **v2rayN-With-Core.zip** from GitHub. Import your Master Key above to connect.</p>
                                 </div>
                                 <a
-                                    href="/orbixa-desktop Setup 1.0.0.exe"
-                                    download
-                                    className="btn-primary w-full py-4 shadow-accent-glow"
+                                    href="https://github.com/2rayN/v2rayN/releases"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn-primary w-full py-4 shadow-accent-glow flex items-center justify-center gap-2"
                                 >
-                                    <Download size={20} /> Download v1.0.4
+                                    <Download size={20} /> Get v2rayN
                                 </a>
+                                <p className="text-[10px] text-gray-600 mt-2 italic">*Standalone Orbixa Client coming soon</p>
                             </div>
                         </div>
                     </div>
