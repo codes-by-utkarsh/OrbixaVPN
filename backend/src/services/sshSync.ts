@@ -48,13 +48,16 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 const command = `
                     if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
                     sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
-                    # Phase 1: Force remove ALL 'flow' keys from anywhere in the file
-                    sudo jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray_clean.json
-                    # Phase 2: Add the user ID to the cleaned file
-                    sudo jq --arg uuid "${userUuid}" 'if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{"id": $uuid}] end' /tmp/xray_clean.json > /tmp/xray_final.json
-                    # Phase 3: Deploy final config and restart
-                    sudo mv /tmp/xray_final.json /usr/local/etc/xray/config.json
-                    sudo rm /tmp/xray_clean.json
+                    
+                    # One single, powerful jq command to clean ALL flows and add the user
+                    sudo jq --arg uuid "${userUuid}" '
+                        (.inbounds[0].settings.clients[] |= del(.flow)) | 
+                        if .inbounds[0].settings.clients | any(.id == $uuid) 
+                        then . 
+                        else .inbounds[0].settings.clients += [{"id": $uuid}] 
+                        end
+                    ' /usr/local/etc/xray/config.json > /tmp/xray.json && \
+                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
                     sudo systemctl restart xray
                 `;
 
