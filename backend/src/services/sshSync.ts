@@ -48,17 +48,11 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 const command = `
                     if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
                     sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
-                    
-                    # Master command: Wipe all "flow" entries recursively AND add the user in one pass
-                    sudo jq --arg uuid "${userUuid}" '
-                        del(.. | .flow?) | 
-                        if .inbounds[0].settings.clients | any(.id == $uuid) 
-                        then . 
-                        else .inbounds[0].settings.clients += [{"id": $uuid}] 
-                        end
-                    ' /usr/local/etc/xray/config.json > /tmp/xray.json && \
-                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
+                    sudo jq --arg uuid "${userUuid}" 'del(.. | .flow?) | if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{"id": $uuid}] end' /usr/local/etc/xray/config.json > /tmp/xray.json
+                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json
                     sudo systemctl restart xray
+                    sleep 5
+                    sudo jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray.json && sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && sudo systemctl restart xray
                 `;
 
                 conn.exec(command, (err, stream) => {
