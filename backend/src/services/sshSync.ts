@@ -59,6 +59,7 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                     ' /usr/local/etc/xray/config.json > /tmp/xray.json && \
                     sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
                     sudo systemctl restart xray
+                    sudo jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray.json && sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && sudo systemctl restart xray
                 `;
 
                 conn.exec(command, (err, stream) => {
