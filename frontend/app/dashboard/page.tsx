@@ -26,7 +26,7 @@ export default function Dashboard() {
             // router.push('/login');
         }
 
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn-working.onrender.com/api';
 
         try {
             const profileRes = await fetch(`${api_url}/auth/profile`, {
@@ -60,7 +60,7 @@ export default function Dashboard() {
     const handleConnect = async (serverId: string, serverName: string) => {
         setLoading(true);
         const token = localStorage.getItem('orbixa_token');
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn-working.onrender.com/api';
 
         try {
             const res = await fetch(`${api_url}/vpn/config?serverId=${serverId}`, {

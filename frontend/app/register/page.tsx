@@ -14,7 +14,7 @@ export default function RegisterPage() {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn-working.onrender.com/api';
 
         try {
             const res = await fetch(`${api_url}/auth/register`, {
