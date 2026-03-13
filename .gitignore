@@ -68,6 +68,8 @@ screenshots/
 *.png
 *.jpg
 *.jpeg
+!frontend/public/*.png
+!frontend/public/*.jpg
 !docs/assets/*.png
 !docs/assets/*.jpg
 !mobile-app/assets/*.png
