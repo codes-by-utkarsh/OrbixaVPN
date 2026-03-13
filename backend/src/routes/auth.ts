@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
+import { syncUserToNode } from '../services/sshSync';
 
 const router = express.Router();
 
@@ -13,6 +14,9 @@ router.post('/register', async (req, res) => {
 
         const user = new User({ email, password });
         await user.save();
+
+        // Background sync to VPN nodes
+        syncUserToNode(user.uuid as string).catch((err: any) => console.error('Delayed Sync Error:', err));
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
         res.status(201).json({ token, user: { email: user.email, uuid: user.uuid, plan: user.plan } });
