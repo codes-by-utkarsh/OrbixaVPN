@@ -171,9 +171,14 @@ export default function Dashboard() {
                                     const token = localStorage.getItem('orbixa_token');
                                     try {
                                         const res = await fetch(`${api_url}/vpn/sync`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
-                                        if (res.ok) alert('Sync triggered! Server is whitelisting your device...');
-                                        else alert('Sync failed. Check backend logs.');
-                                    } catch (e) { alert('Network error during sync'); }
+                                        const data = await res.json().catch(() => ({ message: 'Server did not return a valid message' }));
+
+                                        if (res.ok) {
+                                            alert(`Sync Successful: ${data.message}`);
+                                        } else {
+                                            alert(`Sync Failed: ${data.message}`);
+                                        }
+                                    } catch (e) { alert('Network error during sync. Is the backend awake?'); }
                                 }}
                                 title="Force Sync to Server"
                                 className="p-2 hover:bg-surface rounded-lg transition-all text-primary"

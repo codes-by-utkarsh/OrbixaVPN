@@ -42,9 +42,10 @@ router.get('/usage', auth, async (req: any, res) => {
 router.post('/sync', auth, async (req: any, res) => {
     try {
         await syncUserToNode(req.user.uuid);
-        res.json({ message: 'Sync triggered. Please wait 10 seconds for Xray to restart.' });
-    } catch (err) {
-        res.status(500).json({ message: 'Sync failed' });
+        res.json({ message: 'Sync successful. Your UUID is now whitelisted on the server.' });
+    } catch (err: any) {
+        console.error('Manual Sync Failed:', err.message);
+        res.status(500).json({ message: `Sync failed: ${err.message || 'Check SSH credentials or script path'}` });
     }
 });
 

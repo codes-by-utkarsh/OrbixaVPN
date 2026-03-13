@@ -1,43 +1,64 @@
 import { Client } from 'ssh2';
-import User from '../models/User';
 import Server from '../models/Server';
 
-export const syncUserToNode = async (userUuid: string) => {
-    try {
-        // In a real production environment, you would fetch the active nodes from the DB
-        // For now, we sync to the primary node provided by the user
-        const server = await Server.findOne({ status: 'online' });
+export const syncUserToNode = (userUuid: string): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log(`Starting SSH sync for user: ${userUuid}`);
+            const server = await Server.findOne({ status: 'online' });
 
-        if (!server || !server.sshHost) {
-            console.log('Skipping SSH sync: No active server with SSH credentials found.');
-            return;
-        }
+            if (!server || !server.sshHost) {
+                console.warn('SSH Sync: No active server with credentials found in DB.');
+                return resolve(); // Resolve but warn
+            }
 
-        const conn = new Client();
+            console.log(`Connecting to SSH: ${server.sshUser}@${server.sshHost}`);
+            const conn = new Client();
 
-        conn.on('ready', () => {
-            console.log(`SSH Connection Ready to ${server.sshHost}`);
-            // Running the add_user script on the remote server
-            conn.exec(`sudo /usr/local/bin/add_user.sh ${userUuid}`, (err, stream) => {
-                if (err) throw err;
-                stream.on('close', (code: number, signal: string) => {
-                    console.log(`SSH Sync Finished with code ${code}`);
-                    conn.end();
-                }).on('data', (data: any) => {
-                    console.log('SSH STDOUT: ' + data);
-                }).stderr.on('data', (data: any) => {
-                    console.log('SSH STDERR: ' + data);
+            conn.on('ready', () => {
+                console.log('✅ SSH Connection established');
+                // The script must be executable on the server
+                const command = `sudo /usr/local/bin/add_user.sh ${userUuid}`;
+
+                conn.exec(command, (err, stream) => {
+                    if (err) {
+                        console.error('SSH Exec Error:', err);
+                        conn.end();
+                        return reject(err);
+                    }
+
+                    let stdout = '';
+                    let stderr = '';
+
+                    stream.on('close', (code: number) => {
+                        console.log(`SSH Command exited with code ${code}`);
+                        conn.end();
+                        if (code === 0) {
+                            resolve();
+                        } else {
+                            reject(new Error(`Command failed with code ${code}: ${stderr}`));
+                        }
+                    }).on('data', (data: any) => {
+                        stdout += data;
+                    }).stderr.on('data', (data: any) => {
+                        stderr += data;
+                    });
                 });
+            }).on('error', (err) => {
+                console.error('❌ SSH Connection Error:', err);
+                reject(err);
+            }).connect({
+                host: server.sshHost,
+                port: 22,
+                username: server.sshUser || 'ubuntu',
+                password: server.sshPassword as any,
+                privateKey: server.sshKey ? server.sshKey.replace(/\\n/g, '\n') : undefined,
+                readyTimeout: 20000 // 20 seconds timeout
             });
-        }).connect({
-            host: server.sshHost,
-            port: 22,
-            username: server.sshUser || 'ubuntu',
-            password: server.sshPassword as any,
-            privateKey: server.sshKey ? server.sshKey.replace(/\\n/g, '\n') : undefined
-        });
 
-    } catch (err) {
-        console.error('Failed to sync user via SSH:', err);
-    }
+        } catch (err) {
+            console.error('Fatal SSH Sync Error:', err);
+            reject(err);
+        }
+    });
 };
