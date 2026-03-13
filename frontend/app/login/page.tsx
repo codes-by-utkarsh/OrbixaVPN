@@ -40,51 +40,52 @@ export default function LoginPage() {
     };
 
     return (
-        <main className="min-h-screen pt-24 pb-12 flex items-center justify-center relative overflow-hidden">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 blur-[100px] rounded-full animate-pulse-slow"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 blur-[100px] rounded-full animate-pulse-slow"></div>
+        <main className="min-h-screen flex items-center justify-center relative overflow-hidden bg-background">
+            <div className="cyber-glow top-0 left-0 w-[600px] h-[600px] bg-primary/10" />
+            <div className="cyber-glow bottom-0 right-0 w-[500px] h-[500px] bg-accent-purple/10" />
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="max-w-md mx-auto">
+                <div className="max-w-xl mx-auto">
                     <div className="text-center mb-10">
-                        <div className="inline-flex p-1 bg-primary/10 rounded-2xl border border-primary/20 mb-6 overflow-hidden">
-                            <img src="/logo.png" alt="Orbixa Logo" className="w-16 h-16 object-cover rounded-xl" />
-                        </div>
-                        <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-                        <p className="text-gray-400">Securely sign in to your Orbixa account</p>
+                        <Link href="/" className="inline-flex items-center gap-3 font-black text-2xl italic tracking-tighter mb-8">
+                            <div className="w-10 h-10 bg-cyber-gradient rounded-xl shadow-glow" />
+                            <span>ORBIXA</span>
+                        </Link>
+                        <h1 className="text-5xl font-black italic tracking-tighter mb-4 uppercase">Identity.</h1>
+                        <p className="text-gray-500 font-bold italic">Secure access to your private tunnel.</p>
                     </div>
 
-                    <div className="premium-border bg-surface/50 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl">
-                        <form onSubmit={handleLogin} className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
-                                <div className="relative">
-                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+                    <div className="clay-card p-12 !rounded-[3rem] shadow-2xl">
+                        <form onSubmit={handleLogin} className="space-y-8">
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-2">Email Hash</label>
+                                <div className="relative group">
+                                    <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={20} />
                                     <input
                                         type="email"
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="name@company.com"
-                                        className="w-full bg-background border border-border rounded-xl py-4 pl-12 pr-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                        placeholder="user@orbixa.mesh"
+                                        className="w-full bg-background border border-white/5 rounded-2xl py-5 pl-14 pr-6 focus:border-primary/50 outline-none transition-all font-bold text-white placeholder:text-gray-700"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center ml-1">
-                                    <label className="text-sm font-medium text-gray-300">Password</label>
-                                    <Link href="#" className="text-xs text-primary hover:underline">Forgot password?</Link>
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center ml-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Secret Token</label>
+                                    <Link href="#" className="text-[10px] text-primary-dark font-black hover:text-primary transition-colors uppercase tracking-widest">Recovery?</Link>
                                 </div>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+                                <div className="relative group">
+                                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={20} />
                                     <input
                                         type="password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full bg-background border border-border rounded-xl py-4 pl-12 pr-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                        className="w-full bg-background border border-white/5 rounded-2xl py-5 pl-14 pr-6 focus:border-primary/50 outline-none transition-all font-bold text-white placeholder:text-gray-700"
                                     />
                                 </div>
                             </div>
@@ -92,17 +93,17 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="btn-primary w-full py-4 text-lg group"
+                                className="btn-primary w-full !py-5 !text-xl !rounded-2xl group shadow-accent-glow"
                             >
                                 {loading ? <Loader2 className="animate-spin" /> : (
-                                    <>Sign In <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} /></>
+                                    <span className="flex items-center justify-center gap-3">AUTHORIZE <ArrowRight className="group-hover:translate-x-1 transition-transform" size={22} /></span>
                                 )}
                             </button>
                         </form>
 
-                        <div className="mt-8 text-center">
-                            <p className="text-gray-400 text-sm">
-                                Don't have an account? <Link href="/register" className="text-primary font-bold hover:underline">Create one for free</Link>
+                        <div className="mt-12 text-center pt-8 border-t border-white/5">
+                            <p className="text-gray-500 text-xs font-bold uppercase tracking-widest italic">
+                                New agent? <Link href="/register" className="text-primary font-black hover:text-primary-light transition-colors">Register Unit</Link>
                             </p>
                         </div>
                     </div>

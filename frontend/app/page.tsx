@@ -1,289 +1,189 @@
-import { ArrowRight, Shield, Globe, Zap, Lock, Cpu, Server, Check } from 'lucide-react';
+import { ArrowRight, Shield, Globe, Zap, Cpu, Check } from 'lucide-react';
 import Link from 'next/link';
+import ConsolePreview from '@/components/ConsolePreview';
 
 export default function Home() {
     return (
-        <main className="min-h-screen">
+        <main className="min-h-screen bg-background text-foreground selection:bg-primary/30">
             {/* Hero Section */}
-            <section className="relative h-screen flex items-center justify-center overflow-hidden">
-                {/* Background Image with Overlay */}
-                <div
-                    className="absolute inset-0 bg-hero-pattern bg-cover bg-center bg-no-repeat scale-105"
-                    style={{ filter: 'brightness(0.4)' }}
-                ></div>
-                <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background"></div>
-
-                <div className="container mx-auto px-6 relative z-10 text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary-light text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                        </span>
-                        Next-Gen VLESS Infrastructure is Live
-                    </div>
-
-                    <h1 className="text-5xl md:text-8xl font-bold mb-8 tracking-tighter leading-none italic animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
-                        SECURE. PRIVATE. <br />
-                        <span className="text-gradient">BORDERLESS.</span>
-                    </h1>
-
-                    <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
-                        Experience true digital freedom with Orbixa VPN. Leveraging cutting-edge Xray-core technology for undetectable internet tunneling.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-in fade-in slide-in-from-bottom-16 duration-1000 delay-300">
-                        <Link href="/register" className="btn-primary w-full sm:w-auto px-10 py-4 text-lg">
-                            Get Started Now <ArrowRight size={20} />
-                        </Link>
-                        <Link href="/login" className="btn-secondary w-full sm:w-auto px-10 py-4 text-lg">
-                            Go to Dashboard
-                        </Link>
-                    </div>
+            <section className="relative min-h-screen flex items-center justify-center pt-28 overflow-hidden">
+                {/* Background Image Layer */}
+                <div className="absolute inset-0 z-0 scale-110">
+                    <img
+                        src="/hero-bg.png"
+                        alt=""
+                        className="w-full h-full object-cover opacity-30 grayscale brightness-75 mix-blend-lighten"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+                    <div className="absolute inset-0 bg-background/20 backdrop-blur-[1px]" />
                 </div>
 
-                {/* Scroll Indicator */}
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
-                    <div className="w-1 h-12 rounded-full bg-gradient-to-b from-primary to-transparent"></div>
-                </div>
-            </section>
+                <div className="cyber-glow top-20 left-[-10%] w-[600px] h-[600px] bg-primary/20" />
+                <div className="cyber-glow bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent-purple/20" />
 
-            {/* Features Section */}
-            <section id="features" className="py-24 bg-background border-t border-border">
-                <div className="container mx-auto px-6">
-                    <div className="text-center mb-24">
-                        <span className="text-primary font-bold uppercase tracking-[0.4em] text-xs">Core Technology</span>
-                        <h2 className="text-4xl md:text-7xl font-bold tracking-tighter mt-4 italic">ADVANCED TUNNELING <br />RE-IMAGINED.</h2>
-                    </div>
-
-                    <div className="space-y-40">
-                        {/* Feature 1: VLESS Engine */}
-                        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32">
-                            <div className="flex-1 space-y-8">
-                                <div className="inline-flex px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-bold uppercase tracking-widest">
-                                    Protocol Alpha
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">The Visionary <br /><span className="text-gradient">VLESS + Reality.</span></h3>
-                                <p className="text-gray-400 text-lg leading-relaxed">
-                                    We've moved beyond traditional VPN protocols like OpenVPN and WireGuard. Our proprietary VLESS implementation utilizes the <strong>Reality</strong> transport protocol, making your data streams indistinguishable from standard, secure web traffic.
-                                </p>
-                                <ul className="space-y-4">
-                                    {[
-                                        "DPI-Immune: Pass through the strictest firewalls.",
-                                        "Minimal Header Overhead: Faster handshake, lower latency.",
-                                        "Zero Fingerprint: No recognizable VPN 'signature'."
-                                    ].map((item, i) => (
-                                        <li key={i} className="flex items-center gap-3 text-sm text-gray-300">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-glow"></div>
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="flex-1 w-full aspect-square relative flex items-center justify-center">
-                                <div className="absolute inset-0 bg-primary/10 blur-[120px] rounded-full opacity-50"></div>
-                                <div className="premium-border bg-surface/30 p-8 rounded-[3rem] w-full h-full flex flex-col items-center justify-center text-center relative overflow-hidden group">
-                                    <Cpu size={120} className="text-primary mb-8 group-hover:scale-110 transition-transform duration-500 opacity-50" />
-                                    <div className="space-y-2 font-mono text-[10px] text-primary/50">
-                                        <p>Handshaking: OK</p>
-                                        <p>Encryption: Reality/TLS</p>
-                                        <p>Tunnel: Transparent</p>
-                                    </div>
-                                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
-                                </div>
-                            </div>
+                <div className="container mx-auto px-6 relative z-10">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-primary-light text-[10px] font-bold uppercase tracking-[0.2em] mb-8 animate-float">
+                            <Zap size={12} className="text-primary fill-primary" />
+                            Next-Gen VLESS Infrastructure Live
                         </div>
 
-                        {/* Feature 2: RAM-Only Infrastructure */}
-                        <div className="flex flex-col lg:flex-row-reverse items-center gap-16 lg:gap-32">
-                            <div className="flex-1 space-y-8">
-                                <div className="inline-flex px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono font-bold uppercase tracking-widest">
-                                    Privacy Core
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Total Volatility <br /><span className="text-gradient from-red-500 to-orange-500">Zero-Log Identity.</span></h3>
-                                <p className="text-gray-400 text-lg leading-relaxed">
-                                    Your digital footprint ends where our servers begin. We operate a massive network of <strong>RAM-only nodes</strong> that reboot every 24 hours, ensuring that no user data ever survives a cycle.
-                                </p>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 bg-surface/20 border border-border rounded-2xl">
-                                        <p className="text-xs text-gray-500 font-bold uppercase mb-1">State</p>
-                                        <p className="text-red-500 font-mono text-sm uppercase">Transient</p>
-                                    </div>
-                                    <div className="p-4 bg-surface/20 border border-border rounded-2xl">
-                                        <p className="text-xs text-gray-500 font-bold uppercase mb-1">Method</p>
-                                        <p className="text-white font-mono text-sm uppercase">Encrypted RAM</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex-1 w-full aspect-square relative flex items-center justify-center">
-                                <div className="absolute inset-0 bg-red-500/10 blur-[120px] rounded-full opacity-50"></div>
-                                <div className="premium-border bg-surface/30 p-12 rounded-[3rem] w-full h-full flex flex-col items-center justify-center relative overflow-hidden group">
-                                    <Shield size={120} className="text-red-400 mb-8 animate-pulse-slow opacity-50" />
-                                    <div className="w-full space-y-4">
-                                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                            <div className="h-full bg-red-500 w-[70%]" />
-                                        </div>
-                                        <div className="flex justify-between text-[10px] font-mono text-gray-500">
-                                            <span>RAM USAGE</span>
-                                            <span>VOLATILE</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h1 className="text-6xl md:text-9xl font-black mb-6 tracking-tighter leading-[0.85] italic">
+                            SECURE.<br />
+                            PRIVATE.<br />
+                            <span className="text-gradient">BORDERLESS.</span>
+                        </h1>
 
-                        {/* Feature 3: Global Mesh */}
-                        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32">
-                            <div className="flex-1 space-y-8">
-                                <div className="inline-flex px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-mono font-bold uppercase tracking-widest">
-                                    Network Grid
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">The Global Mesh <br /><span className="text-gradient">No-Latency Backbone.</span></h3>
-                                <p className="text-gray-400 text-lg leading-relaxed">
-                                    Orbixa doesn't rent standard server space. We own our hardware on premium peering lines across 30+ countries. This guarantees high bandwidth and 99.9% uptime for gamers and streamers alike.
-                                </p>
-                                <div className="flex items-center gap-6">
-                                    <div className="text-center">
-                                        <p className="text-2xl font-bold text-white">100+</p>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Active Nodes</p>
-                                    </div>
-                                    <div className="w-[1px] h-10 bg-border" />
-                                    <div className="text-center">
-                                        <p className="text-2xl font-bold text-white">10Gbps</p>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Line Speed</p>
-                                    </div>
-                                    <div className="w-[1px] h-10 bg-border" />
-                                    <div className="text-center">
-                                        <p className="text-2xl font-bold text-accent">99.9%</p>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">SLA Uptime</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex-1 w-full aspect-square relative flex items-center justify-center">
-                                <div className="absolute inset-0 bg-accent/10 blur-[120px] rounded-full opacity-50"></div>
-                                <div className="premium-border bg-surface/30 p-12 rounded-[3rem] w-full h-full flex flex-col items-center justify-center relative overflow-hidden group">
-                                    <Globe size={120} className="text-accent mb-8 group-hover:rotate-12 transition-transform duration-500 opacity-50" />
-                                    <div className="grid grid-cols-4 gap-2 w-full">
-                                        {[...Array(8)].map((_, i) => (
-                                            <div key={i} className={`h-8 rounded-lg bg-accent/${(i + 1) * 10} border border-accent/20`} />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* About Section */}
-            <section id="about" className="py-32 bg-surface/20 border-y border-border">
-                <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                    <div>
-                        <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-                            Built by privacy enthusiasts, <br />
-                            <span className="text-primary italic">for everyone.</span>
-                        </h2>
-                        <p className="text-lg text-gray-400 mb-8 max-w-xl">
-                            At Orbixa, we believe privacy isn't a premium feature—it's a human right. Our engineers have built a system that bypasses even the most advanced censorship.
+                        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
+                            Experience the future of digital freedom. Deep packet inspection invisible, zero-latency tunneling through our high-performance Global Mesh.
                         </p>
-                        <ul className="space-y-4 mb-10">
-                            {[
-                                "Native support for Windows, macOS, and Linux",
-                                "Unlimited bandwidth on all plans",
-                                "Dedicated IP options for elite privacy",
-                                "Multi-hop connection chaining"
-                            ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-3">
-                                    <div className="bg-primary/20 p-1 rounded-full">
-                                        <Check className="text-primary" size={16} />
-                                    </div>
-                                    <span className="text-gray-300 font-medium">{item}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <button className="btn-secondary">Learn More About Our Tech</button>
+
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                            <Link href="/register" className="btn-primary text-lg group">
+                                Start Browsing <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link href="/login" className="btn-secondary text-lg">
+                                Dashboard
+                            </Link>
+                        </div>
                     </div>
-                    <div className="relative">
-                        <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full opacity-30"></div>
-                        <div className="relative p-2 bg-surface border border-border rounded-[2.5rem] overflow-hidden shadow-2xl">
-                            <img
-                                src="/hero-bg.png"
-                                alt="Dashboard Preview"
-                                className="rounded-[2rem] border border-border h-full object-cover"
-                            />
+
+                    <div className="mt-24 max-w-6xl mx-auto px-4 animate-in fade-in slide-in-from-bottom-20 duration-1000 delay-500">
+                        <div className="clay-card p-4 !rounded-[3rem] group">
+                            <ConsolePreview />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Pricing Section */}
-            <section id="pricing" className="py-32">
+            {/* Features */}
+            <section id="features" className="py-32 relative">
                 <div className="container mx-auto px-6">
-                    <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6">Simple, Transparent Pricing</h2>
-                        <p className="text-gray-400 max-w-lg mx-auto">Choose the plan that fits your privacy needs. No hidden fees, ever.</p>
+                    <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
+                        <div>
+                            <span className="text-primary-dark font-black uppercase tracking-[0.5em] text-[10px]">Architecture</span>
+                            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mt-4 italic leading-none uppercase">Advanced <br />Tunneling.</h2>
+                        </div>
+                        <p className="text-gray-500 max-w-sm text-sm font-medium">We've re-engineered the VPN backbone using VLESS Reality protocols for maximum stealth.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {/* Free Plan */}
-                        <div className="premium-border p-8 bg-surface/30 rounded-3xl flex flex-col items-center">
-                            <span className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Standard</span>
-                            <div className="text-4xl font-bold mb-8">$0<span className="text-lg text-gray-500 font-normal">/mo</span></div>
-                            <ul className="space-y-4 mb-10 w-full">
-                                <li className="text-gray-400 flex items-center gap-2"><Check size={16} className="text-primary" /> 2 Global Regions</li>
-                                <li className="text-gray-400 flex items-center gap-2"><Check size={16} className="text-primary" /> Standard Speeds</li>
-                                <li className="text-gray-400 flex items-center gap-2"><Check size={16} className="text-primary" /> Community Support</li>
-                            </ul>
-                            <Link href="/register" className="btn-secondary w-full mt-auto">Get Started</Link>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="clay-card p-10 space-y-8 group hover:-translate-y-2 transition-transform duration-500">
+                            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                <Cpu size={32} />
+                            </div>
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-bold italic uppercase tracking-tighter">VLESS reality</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed font-medium">Leverage undetectable Reality transport protocols that mask your traffic as standard secure web data.</p>
+                            </div>
                         </div>
 
-                        {/* Pro Plan */}
-                        <div className="border-2 border-primary p-12 bg-surface/50 rounded-3xl flex flex-col items-center relative scale-105 shadow-glow">
-                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Most Popular</div>
-                            <span className="text-sm font-bold text-primary uppercase tracking-widest mb-4">Premium</span>
-                            <div className="text-5xl font-bold mb-8">$5.99<span className="text-xl text-gray-500 font-normal">/mo</span></div>
-                            <ul className="space-y-6 mb-12 w-full text-lg">
-                                <li className="text-white flex items-center gap-3"><Check size={20} className="text-primary" /> All 50+ Global Regions</li>
-                                <li className="text-white flex items-center gap-3"><Check size={20} className="text-primary" /> Ultra-Low Latency (1ms)</li>
-                                <li className="text-white flex items-center gap-3"><Check size={20} className="text-primary" /> 24/7 Priority Support</li>
-                                <li className="text-white flex items-center gap-3"><Check size={20} className="text-primary" /> Dedicated Static IPs</li>
-                            </ul>
-                            <Link href="/register" className="btn-primary w-full mt-auto py-5 text-xl">Get Pro Access</Link>
+                        <div className="clay-card p-10 space-y-8 group hover:-translate-y-2 transition-transform duration-500">
+                            <div className="w-16 h-16 bg-accent-purple/10 rounded-2xl flex items-center justify-center text-accent-purple group-hover:scale-110 transition-transform">
+                                <Shield size={32} />
+                            </div>
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-bold italic uppercase tracking-tighter">Volatility</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed font-medium">Our RAM-only nodes reset constantly, ensuring no logs ever exist. Total volatile privacy by design.</p>
+                            </div>
                         </div>
 
-                        {/* Enterprise Plan */}
-                        <div className="premium-border p-8 bg-surface/30 rounded-3xl flex flex-col items-center">
-                            <span className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Business</span>
-                            <div className="text-4xl font-bold mb-8">$19.99<span className="text-lg text-gray-500 font-normal">/mo</span></div>
-                            <ul className="space-y-4 mb-10 w-full">
-                                <li className="text-gray-400 flex items-center gap-2"><Check size={16} className="text-primary" /> 10 Concurrent Devices</li>
-                                <li className="text-gray-400 flex items-center gap-2"><Check size={16} className="text-primary" /> Private VPS Nodes</li>
-                                <li className="text-gray-400 flex items-center gap-2"><Check size={16} className="text-primary" /> Advanced API Access</li>
+                        <div className="clay-card p-10 space-y-8 group hover:-translate-y-2 transition-transform duration-500">
+                            <div className="w-16 h-16 bg-accent-pink/10 rounded-2xl flex items-center justify-center text-accent-pink group-hover:scale-110 transition-transform">
+                                <Globe size={32} />
+                            </div>
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-bold italic uppercase tracking-tighter">Global Mesh</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed font-medium">Premium peering lines across 30+ countries with 10Gbps backbone for zero-latency streaming and gaming.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Pricing */}
+            <section id="pricing" className="py-32 bg-surface/10 border-y border-white/5 relative overflow-hidden">
+                <div className="cyber-glow top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5" />
+
+                <div className="container mx-auto px-6 relative z-10">
+                    <div className="text-center max-w-2xl mx-auto mb-20">
+                        <h2 className="text-5xl font-black italic tracking-tighter mb-6 uppercase">Elite Access.</h2>
+                        <p className="text-gray-500 font-medium italic">Choose the plan that fits your privacy needs.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
+                        <div className="clay-card p-10 flex flex-col items-center text-center !rounded-5xl">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6">Standard</span>
+                            <div className="text-5xl font-black italic mb-8">$0<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
+                            <ul className="space-y-4 mb-10 text-sm text-gray-500 font-medium w-full">
+                                <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> 2 Global Regions</li>
+                                <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Standard Speeds</li>
+                                <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> 1 Device Limit</li>
                             </ul>
-                            <Link href="/register" className="btn-secondary w-full mt-auto">Get Business</Link>
+                            <Link href="/register" className="btn-secondary w-full !rounded-2xl">Start Free</Link>
+                        </div>
+
+                        <div className="clay-card p-12 flex flex-col items-center text-center !rounded-5xl border-primary/20 scale-105 shadow-glow relative overflow-visible">
+                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-glow">Most Popular</div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-6">Premium</span>
+                            <div className="text-7xl font-black italic mb-8 text-gradient">$5.99<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
+                            <ul className="space-y-5 mb-12 text-sm text-white font-black w-full uppercase tracking-tighter">
+                                <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> 50+ Global Nodes</li>
+                                <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> Ultra-Low Latency</li>
+                                <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> 5 Devices Limit</li>
+                                <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> Priority Support</li>
+                            </ul>
+                            <Link href="/register" className="btn-primary w-full !rounded-2xl shadow-accent-glow">Go Pro Access</Link>
+                        </div>
+
+                        <div className="clay-card p-10 flex flex-col items-center text-center !rounded-5xl">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6">Business</span>
+                            <div className="text-5xl font-black italic mb-8">$19.99<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
+                            <ul className="space-y-4 mb-10 text-sm text-gray-500 font-medium w-full">
+                                <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Private Dedicated Nodes</li>
+                                <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Full API Access</li>
+                                <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Team Management</li>
+                            </ul>
+                            <Link href="/register" className="btn-secondary w-full !rounded-2xl">Contact Sales</Link>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="py-20 border-t border-border bg-surface/10">
+            <footer className="py-24 relative overflow-hidden bg-background">
                 <div className="container mx-auto px-6">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-10">
-                        <div className="flex flex-col items-center md:items-start gap-4">
-                            <div className="flex items-center gap-3">
-                                <img src="/logo.png" alt="Orbixa Logo" className="w-8 h-8 object-cover rounded-lg border border-primary/20" />
-                                <span className="text-2xl font-bold tracking-tight">Orbixa<span className="text-primary text-gradient">VPN</span></span>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 border-t border-white/5 pt-12">
+                        <div className="space-y-6">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 bg-cyber-gradient rounded-xl shadow-glow" />
+                                <span className="text-3xl font-black italic tracking-tighter">ORBIXA</span>
                             </div>
-                            <p className="text-gray-500 text-sm max-w-xs text-center md:text-left">
-                                High-performance, privacy-first internet tunneling for the modern era.
+                            <p className="text-gray-500 text-sm max-w-xs font-medium">
+                                Redefining digital limits. High-performance tunneling for the modern era.
                             </p>
                         </div>
-                        <div className="flex gap-10 text-sm font-medium text-gray-400">
-                            <Link href="/privacy" className="hover:text-white pb-1 border-b border-transparent hover:border-primary">Privacy Policy</Link>
-                            <Link href="/terms" className="hover:text-white pb-1 border-b border-transparent hover:border-primary">Terms of Service</Link>
-                            <Link href="/contact" className="hover:text-white pb-1 border-b border-transparent hover:border-primary">Contact Us</Link>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+                            <div className="space-y-4 flex flex-col">
+                                <span className="text-white">Product</span>
+                                <Link href="#" className="hover:text-primary transition-colors">Nodes</Link>
+                                <Link href="#" className="hover:text-primary transition-colors">Tech</Link>
+                            </div>
+                            <div className="space-y-4 flex flex-col">
+                                <span className="text-white">Company</span>
+                                <Link href="#" className="hover:text-primary transition-colors">About</Link>
+                                <Link href="#" className="hover:text-primary transition-colors">Support</Link>
+                            </div>
+                            <div className="space-y-4 flex flex-col">
+                                <span className="text-white">Legal</span>
+                                <Link href="#" className="hover:text-primary transition-colors">Privacy</Link>
+                                <Link href="#" className="hover:text-primary transition-colors">Terms</Link>
+                            </div>
                         </div>
-                        <p className="text-gray-600 text-xs">© 2026 Orbixa VPN. All rights reserved.</p>
+                    </div>
+                    <div className="mt-20 flex flex-col md:flex-row justify-between text-[10px] font-black uppercase tracking-widest text-gray-600 border-t border-white/5 pt-8">
+                        <p>© 2026 Orbixa VPN. Engineered for supreme privacy.</p>
+                        <p className="flex items-center gap-2">Built with <span className="text-primary">Cyber-Clay</span> Stack</p>
                     </div>
                 </div>
             </footer>
