@@ -4,21 +4,25 @@ import Server from '../models/Server';
 const normalizePrivateKey = (key: string) => {
     if (!key) return undefined;
 
-    // Step 1: Replace literal "\n" strings with actual newlines
-    let normalized = key.replace(/\\n/g, '\n').trim();
+    // Step 1: Clean basic whitespace and handle literal "\n" strings
+    let cleaned = key.replace(/\\n/g, '\n').trim();
 
-    // Step 2: If it's a single line but contains the standard headers, we need to re-wrap it
-    if (!normalized.includes('\n') && normalized.startsWith('-----')) {
-        const match = normalized.match(/(-----BEGIN [^-]+-----)(.*?)(-----END [^-]+-----)/);
-        if (match) {
-            const [_, header, content, footer] = match;
-            // Re-wrap the base64 content every 64 characters
-            const wrappedContent = content.trim().match(/.{1,64}/g)?.join('\n');
-            normalized = `${header}\n${wrappedContent}\n${footer}`;
+    // Step 2: Extract the actual key content if it's wrapped in headers
+    // This handles cases where the key is one long line with headers but no internal newlines
+    if (cleaned.startsWith('-----BEGIN') && !cleaned.includes('\n', 30)) {
+        const headerMatch = cleaned.match(/^(-----BEGIN [^-]+-----)(.*)(-----END [^-]+-----)$/);
+        if (headerMatch) {
+            const [_, header, body, footer] = headerMatch;
+            // Clean the body of any remaining whitespace or weird characters
+            const cleanBody = body.replace(/\s/g, '');
+            // Wrap the body at 64 chars
+            const wrappedBody = cleanBody.match(/.{1,64}/g)?.join('\n');
+            return `${header}\n${wrappedBody}\n${footer}\n`;
         }
     }
 
-    return normalized;
+    // Step 3: Ensure it ends with a newline
+    return cleaned.endsWith('\n') ? cleaned : cleaned + '\n';
 };
 
 export const syncUserToNode = (userUuid: string): Promise<void> => {
@@ -29,16 +33,17 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
 
             if (!server || !server.sshHost) {
                 console.warn('SSH Sync: No active server with credentials found in DB.');
-                return resolve(); // Resolve but warn
+                return resolve();
             }
 
-            const pKey = server.sshKey ? normalizePrivateKey(server.sshKey as string) : undefined;
+            const sshKeyContent = (server.sshKey as string) || '';
+            const pKey = sshKeyContent ? normalizePrivateKey(sshKeyContent) : undefined;
+
             console.log(`Connecting to SSH: ${server.sshUser}@${server.sshHost}`);
             const conn = new Client();
 
             conn.on('ready', () => {
                 console.log('✅ SSH Connection established');
-                // The script must be executable on the server
                 const command = `sudo /usr/local/bin/add_user.sh ${userUuid}`;
 
                 conn.exec(command, (err, stream) => {
@@ -53,13 +58,10 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                     stream.on('close', (code: number) => {
                         console.log(`SSH Command exited with code ${code}`);
                         conn.end();
-                        if (code === 0) {
-                            resolve();
-                        } else {
-                            reject(new Error(`Command failed with code ${code}: ${stderr}`));
-                        }
+                        if (code === 0) resolve();
+                        else reject(new Error(`Command failed with code ${code}: ${stderr}`));
                     }).on('data', (data: any) => {
-                        // stdout ignored for success
+                        // stdout ignored
                     }).stderr.on('data', (data: any) => {
                         stderr += data;
                     });
@@ -71,7 +73,7 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 host: server.sshHost,
                 port: 22,
                 username: server.sshUser || 'ubuntu',
-                password: server.sshPassword as any,
+                password: (server.sshPassword as any) || undefined,
                 privateKey: pKey,
                 readyTimeout: 30000
             });
