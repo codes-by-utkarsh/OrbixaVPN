@@ -25,8 +25,8 @@ router.get('/config', auth, async (req: any, res) => {
         const user = req.user;
 
         // VLESS URI Construction (Reality implementation)
-        // Format: vless://uuid@host:port?security=reality&sni=sni&fp=chrome&pbk=publicKey&sid=shortId&type=grpc&serviceName=grpcName#Name
-        const vlessLink = `vless://${user.uuid}@${server.host}:${server.port}?type=ws&security=tls&path=%2Forbixa#Orbixa-${server.location.replace(' ', '-')}`;
+        const locationPart = server.location.split(',')[0].trim().replace(/\s+/g, '-');
+        const vlessLink = `vless://${user.uuid}@${server.host}:${server.port}?type=ws&security=tls&path=/orbixa#Orbixa-${locationPart}`;
 
         res.json({ link: vlessLink });
     } catch (err) {
