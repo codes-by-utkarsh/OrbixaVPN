@@ -158,11 +158,28 @@ export default function Dashboard() {
                     </div>
 
                     <div className="premium-border bg-surface/30 p-6 rounded-3xl">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="p-3 bg-primary/10 rounded-xl">
-                                <Key className="text-primary" size={24} />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-primary/10 rounded-xl">
+                                    <Key className="text-primary" size={24} />
+                                </div>
+                                <span className="text-gray-400 text-sm font-medium">Orbixa Node Key</span>
                             </div>
-                            <span className="text-gray-400 text-sm font-medium">Orbixa Node Key</span>
+                            <button
+                                onClick={async () => {
+                                    const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn-working.onrender.com/api';
+                                    const token = localStorage.getItem('orbixa_token');
+                                    try {
+                                        const res = await fetch(`${api_url}/vpn/sync`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                                        if (res.ok) alert('Sync triggered! Server is whitelisting your device...');
+                                        else alert('Sync failed. Check backend logs.');
+                                    } catch (e) { alert('Network error during sync'); }
+                                }}
+                                title="Force Sync to Server"
+                                className="p-2 hover:bg-surface rounded-lg transition-all text-primary"
+                            >
+                                <RefreshCcw size={16} />
+                            </button>
                         </div>
                         <div className="flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border group hover:border-primary/50 transition-all">
                             <span className="text-[10px] font-mono text-primary-light truncate flex-1">

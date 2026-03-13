@@ -1,6 +1,7 @@
 import express from 'express';
 import { auth } from './auth';
 import Server from '../models/Server';
+import { syncUserToNode } from '../services/sshSync';
 
 const router = express.Router();
 
@@ -36,6 +37,15 @@ router.get('/usage', auth, async (req: any, res) => {
         downloaded: req.user.downloaded,
         limit: req.user.limit
     });
+});
+
+router.post('/sync', auth, async (req: any, res) => {
+    try {
+        await syncUserToNode(req.user.uuid);
+        res.json({ message: 'Sync triggered. Please wait 10 seconds for Xray to restart.' });
+    } catch (err) {
+        res.status(500).json({ message: 'Sync failed' });
+    }
 });
 
 export default router;
