@@ -113,38 +113,38 @@ export default function Home() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
                         <div className="clay-card p-10 flex flex-col items-center text-center !rounded-5xl">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6">Standard</span>
-                            <div className="text-5xl font-black italic mb-8">$0<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6">Basic</span>
+                            <div className="text-5xl font-black italic mb-8">₹70<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
                             <ul className="space-y-4 mb-10 text-sm text-gray-500 font-medium w-full">
                                 <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> 2 Global Regions</li>
                                 <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Standard Speeds</li>
                                 <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> 1 Device Limit</li>
                             </ul>
-                            <Link href="/register" className="btn-secondary w-full !rounded-2xl">Start Free</Link>
+                            <Link href="/register" className="btn-secondary w-full !rounded-2xl">Get Started</Link>
                         </div>
 
                         <div className="clay-card p-12 flex flex-col items-center text-center !rounded-5xl border-primary/20 scale-105 shadow-glow relative overflow-visible">
-                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-glow">Most Popular</div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-6">Premium</span>
-                            <div className="text-7xl font-black italic mb-8 text-gradient">$5.99<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
+                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-glow">Best Value</div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-6">Lite Quarterly</span>
+                            <div className="text-7xl font-black italic mb-8 text-gradient">₹180<span className="text-sm font-normal text-gray-600 not-italic">/3mo</span></div>
                             <ul className="space-y-5 mb-12 text-sm text-white font-black w-full uppercase tracking-tighter">
                                 <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> 50+ Global Nodes</li>
                                 <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> Ultra-Low Latency</li>
                                 <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> 5 Devices Limit</li>
                                 <li className="flex items-center justify-center gap-3"><Check size={18} className="text-primary" strokeWidth={3} /> Priority Support</li>
                             </ul>
-                            <Link href="/register" className="btn-primary w-full !rounded-2xl shadow-accent-glow">Go Pro Access</Link>
+                            <Link href="/register" className="btn-primary w-full !rounded-2xl shadow-accent-glow">Go Quarterly</Link>
                         </div>
 
                         <div className="clay-card p-10 flex flex-col items-center text-center !rounded-5xl">
                             <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6">Business</span>
-                            <div className="text-5xl font-black italic mb-8">$19.99<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
+                            <div className="text-5xl font-black italic mb-8">₹1499<span className="text-sm font-normal text-gray-600 not-italic">/mo</span></div>
                             <ul className="space-y-4 mb-10 text-sm text-gray-500 font-medium w-full">
                                 <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Private Dedicated Nodes</li>
                                 <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Full API Access</li>
                                 <li className="flex items-center justify-center gap-2 font-bold"><Check size={14} className="text-primary font-black" strokeWidth={3} /> Team Management</li>
                             </ul>
-                            <Link href="/register" className="btn-secondary w-full !rounded-2xl">Contact Sales</Link>
+                            <Link href="/register" className="btn-secondary w-full !rounded-2xl">Get Business</Link>
                         </div>
                     </div>
                 </div>
@@ -166,18 +166,18 @@ export default function Home() {
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
                             <div className="space-y-4 flex flex-col">
                                 <span className="text-white">Product</span>
-                                <Link href="#" className="hover:text-primary transition-colors">Nodes</Link>
-                                <Link href="#" className="hover:text-primary transition-colors">Tech</Link>
+                                <Link href="/register" className="hover:text-primary transition-colors">Pricing</Link>
+                                <Link href="/login" className="hover:text-primary transition-colors">Nodes</Link>
                             </div>
                             <div className="space-y-4 flex flex-col">
-                                <span className="text-white">Company</span>
-                                <Link href="#" className="hover:text-primary transition-colors">About</Link>
-                                <Link href="#" className="hover:text-primary transition-colors">Support</Link>
+                                <span className="text-white">Support</span>
+                                <Link href="/contact-us" className="hover:text-primary transition-colors">Contact Us</Link>
+                                <Link href="/refund-policy" className="hover:text-primary transition-colors">Refunds</Link>
                             </div>
                             <div className="space-y-4 flex flex-col">
                                 <span className="text-white">Legal</span>
-                                <Link href="#" className="hover:text-primary transition-colors">Privacy</Link>
-                                <Link href="#" className="hover:text-primary transition-colors">Terms</Link>
+                                <Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy</Link>
+                                <Link href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms</Link>
                             </div>
                         </div>
                     </div>

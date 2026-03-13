@@ -68,6 +68,65 @@ export default function Dashboard() {
         router.push('/login');
     };
 
+    const handleSubscribe = async (plan: string) => {
+        const token = localStorage.getItem('orbixa_token');
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn-working.onrender.com/api';
+
+        try {
+            const res = await fetch(`${api_url}/payment/create-order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ planId: plan })
+            });
+
+            const order = await res.json();
+
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '', // Frontend needs the Key ID
+                amount: order.amount,
+                currency: order.currency,
+                name: "Orbixa VPN",
+                description: `Upgrade to ${plan.toUpperCase()}`,
+                order_id: order.id,
+                handler: async function (response: any) {
+                    const verifyRes = await fetch(`${api_url}/payment/verify`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            ...response,
+                            planId: plan
+                        })
+                    });
+
+                    if (verifyRes.ok) {
+                        alert('Payment successful! Access granted.');
+                        fetchDashboardData();
+                    } else {
+                        alert('Verification failed. Please contact support.');
+                    }
+                },
+                prefill: {
+                    email: profile?.email
+                },
+                theme: {
+                    color: "#00f2ff"
+                }
+            };
+
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            alert('An error occurred during payment initialization.');
+        }
+    };
+
     return (
         <div className="min-h-screen pt-24 pb-20 bg-background text-foreground relative overflow-hidden">
             {/* Cyber Glows */}
@@ -191,17 +250,39 @@ export default function Dashboard() {
                                 <div className="p-4 bg-background/50 rounded-2xl border border-white/5 space-y-4">
                                     <div className="flex items-center justify-between">
                                         <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Master Key</span>
-                                        <button
-                                            onClick={copyToClipboard}
-                                            className="text-primary hover:scale-110 transition-transform"
-                                        >
-                                            {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-                                        </button>
+                                        {profile?.isSubscribed && (
+                                            <button
+                                                onClick={copyToClipboard}
+                                                className="text-primary hover:scale-110 transition-transform"
+                                            >
+                                                {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+                                            </button>
+                                        )}
                                     </div>
-                                    <div className="bg-black/40 p-3 rounded-xl border border-white/5 overflow-hidden">
-                                        <p className="text-[8px] font-mono text-primary-light leading-[1.2] break-all line-clamp-3 uppercase tracking-tighter">
-                                            {profile?.uuid ? `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa` : 'Handshaking...'}
-                                        </p>
+                                    <div className="bg-black/40 p-3 rounded-xl border border-white/5 overflow-hidden relative min-h-[60px] flex items-center justify-center">
+                                        {profile?.isSubscribed ? (
+                                            <p className="text-[8px] font-mono text-primary-light leading-[1.2] break-all line-clamp-3 uppercase tracking-tighter">
+                                                {profile?.uuid ? `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa` : 'Handshaking...'}
+                                            </p>
+                                        ) : (
+                                            <div className="text-center space-y-3 py-4 w-full">
+                                                <p className="text-[10px] font-black text-white uppercase tracking-widest mb-2">Select Your Tier</p>
+                                                <div className="flex flex-col gap-2 px-2">
+                                                    <button
+                                                        onClick={() => handleSubscribe('lite')}
+                                                        className="btn-primary !py-3 !px-4 !text-[10px] !rounded-xl w-full"
+                                                    >
+                                                        MONTHLY (₹70)
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleSubscribe('pro')}
+                                                        className="bg-accent-purple hover:bg-accent-purple-light text-black font-black py-3 px-4 text-[10px] rounded-xl w-full shadow-glow-purple transition-all"
+                                                    >
+                                                        QUARTERLY (₹180)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
