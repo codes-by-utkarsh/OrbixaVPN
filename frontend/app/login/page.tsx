@@ -2,104 +2,94 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Shield } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Shield, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-export default function Login() {
+export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-    const [error, setError] = useState('');
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
-
-        try {
-            const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
-            const response = await fetch(`${api_url}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                localStorage.setItem('orbixa_token', data.token);
-                window.location.href = '/dashboard';
-            } else {
-                setError(data.message || 'Login failed.');
-            }
-        } catch (err) {
-            setError('Connection to Orbixa backend failed.');
-        }
+        setLoading(true);
+        // Simulate API call
+        setTimeout(() => {
+            localStorage.setItem('orbixa_token', 'mock_token');
+            router.push('/dashboard');
+        }, 1500);
     };
 
     return (
-        <div className="flex min-h-[calc(100vh-80px)] items-center justify-center px-4">
-            <div className="w-full max-w-md space-y-8 bg-card border border-gray-800 p-10 rounded-2xl shadow-glow">
-                <div className="text-center">
-                    <Shield className="mx-auto h-12 w-12 text-primary drop-shadow-glow" />
-                    <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
-                        Secure Login
-                    </h2>
-                    <p className="mt-2 text-sm text-gray-400">
-                        Access your Orbixa dashboard
-                    </p>
-                </div>
+        <main className="min-h-screen pt-24 pb-12 flex items-center justify-center relative overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 blur-[100px] rounded-full animate-pulse-slow"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 blur-[100px] rounded-full animate-pulse-slow"></div>
 
-                {error && (
-                    <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg text-sm text-center">
-                        {error}
-                    </div>
-                )}
-
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="space-y-4 rounded-md shadow-sm">
-                        <div>
-                            <label htmlFor="email-address" className="sr-only">Email address</label>
-                            <input
-                                id="email-address"
-                                name="email"
-                                type="email"
-                                required
-                                className="relative block w-full rounded-lg border-0 bg-background py-3 text-white ring-1 ring-inset ring-gray-700 placeholder:text-gray-500 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                                placeholder="Email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="max-w-md mx-auto">
+                    <div className="text-center mb-10">
+                        <div className="inline-flex p-3 bg-primary/10 rounded-2xl border border-primary/20 mb-6">
+                            <Shield className="text-primary" size={32} />
                         </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">Password</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className="relative block w-full rounded-lg border-0 bg-background py-3 text-white ring-1 ring-inset ring-gray-700 placeholder:text-gray-500 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
+                        <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
+                        <p className="text-gray-400">Securely sign in to your Orbixa account</p>
                     </div>
 
-                    <div>
-                        <button
-                            type="submit"
-                            className="group relative flex w-full justify-center rounded-lg bg-primary py-3 px-4 text-sm font-semibold text-black hover:bg-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary shadow-glow transition-all"
-                        >
-                            Log in
-                        </button>
+                    <div className="premium-border bg-surface/50 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl">
+                        <form onSubmit={handleLogin} className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
+                                <div className="relative">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="name@company.com"
+                                        className="w-full bg-background border border-border rounded-xl py-4 pl-12 pr-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center ml-1">
+                                    <label className="text-sm font-medium text-gray-300">Password</label>
+                                    <Link href="#" className="text-xs text-primary hover:underline">Forgot password?</Link>
+                                </div>
+                                <div className="relative">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+                                    <input
+                                        type="password"
+                                        required
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="••••••••"
+                                        className="w-full bg-background border border-border rounded-xl py-4 pl-12 pr-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="btn-primary w-full py-4 text-lg group"
+                            >
+                                {loading ? <Loader2 className="animate-spin" /> : (
+                                    <>Sign In <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} /></>
+                                )}
+                            </button>
+                        </form>
+
+                        <div className="mt-8 text-center">
+                            <p className="text-gray-400 text-sm">
+                                Don't have an account? <Link href="/register" className="text-primary font-bold hover:underline">Create one for free</Link>
+                            </p>
+                        </div>
                     </div>
-                </form>
-                <div className="text-center text-sm text-gray-400">
-                    Not a member?{' '}
-                    <Link href="/register" className="font-semibold text-primary hover:text-cyan-400">
-                        Create an account
-                    </Link>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }

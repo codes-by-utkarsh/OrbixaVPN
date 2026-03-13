@@ -30,8 +30,7 @@ echo "Adding UUID $NEW_UUID to $CONFIG_PATH..."
 jq --arg uuid "$NEW_UUID" '
   .inbounds[0].settings.clients += [
     {
-      "id": $uuid,
-      "flow": "xtls-rprx-vision"
+      "id": $uuid
     }
   ]
 ' $CONFIG_PATH > /tmp/xray_temp.json
