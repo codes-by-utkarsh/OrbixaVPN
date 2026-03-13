@@ -171,7 +171,15 @@ export default function Dashboard() {
                                     const token = localStorage.getItem('orbixa_token');
                                     try {
                                         const res = await fetch(`${api_url}/vpn/sync`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
-                                        const data = await res.json().catch(() => ({ message: 'Server did not return a valid message' }));
+                                        const text = await res.text();
+                                        let data;
+                                        try {
+                                            data = JSON.parse(text);
+                                        } catch (e) {
+                                            console.error('Raw response:', text);
+                                            alert(`Server Error: ${res.status} - The backend sent a non-JSON response. Check Render logs.`);
+                                            return;
+                                        }
 
                                         if (res.ok) {
                                             alert(`Sync Successful: ${data.message}`);
