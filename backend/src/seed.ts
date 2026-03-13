@@ -8,9 +8,9 @@ const servers = [
     {
         name: 'Orbixa-Mumbai-01',
         location: 'Mumbai, India',
-        host: 'mumbai.orbixavpn.com',
+        host: 'in1.orbixa.0xutkarsh.tech',
         port: 443,
-        sni: 'mumbai.orbixavpn.com',
+        sni: 'in1.orbixa.0xutkarsh.tech',
         publicKey: 'your_public_key_here',
         shortId: 'your_short_id',
         status: 'online',
