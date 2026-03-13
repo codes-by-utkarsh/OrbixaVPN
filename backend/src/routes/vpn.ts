@@ -7,7 +7,9 @@ const router = express.Router();
 
 router.get('/servers', auth, async (req, res) => {
     try {
-        const servers = await Server.find({ status: { $ne: 'offline' } });
+        // Exclude sensitive SSH details from being sent to the frontend
+        const servers = await Server.find({ status: { $ne: 'offline' } })
+            .select('-sshHost -sshUser -sshPassword -sshKey');
         res.json(servers);
     } catch (err) {
         res.status(500).json({ message: 'Error fetching servers' });
