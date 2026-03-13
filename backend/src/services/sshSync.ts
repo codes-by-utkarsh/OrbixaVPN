@@ -53,15 +53,18 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                         return reject(err);
                     }
 
+                    let stdout = '';
                     let stderr = '';
 
                     stream.on('close', (code: number) => {
+                        console.log(`SSH Command stdout: ${stdout}`);
+                        console.log(`SSH Command stderr: ${stderr}`);
                         console.log(`SSH Command exited with code ${code}`);
                         conn.end();
                         if (code === 0) resolve();
-                        else reject(new Error(`Command failed with code ${code}: ${stderr}`));
+                        else reject(new Error(`Script failed (code ${code}): ${stderr}`));
                     }).on('data', (data: any) => {
-                        // stdout ignored
+                        stdout += data;
                     }).stderr.on('data', (data: any) => {
                         stderr += data;
                     });

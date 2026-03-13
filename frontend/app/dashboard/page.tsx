@@ -196,12 +196,12 @@ export default function Dashboard() {
                         </div>
                         <div className="flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border group hover:border-primary/50 transition-all">
                             <span className="text-[10px] font-mono text-primary-light truncate flex-1">
-                                {profile?.uuid ? `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#OrbixaMaster` : 'Generating Key...'}
+                                {profile?.uuid ? `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa-Mumbai` : 'Generating Key...'}
                             </span>
                             <button
                                 onClick={() => {
                                     if (!profile?.uuid) return;
-                                    const link = `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#OrbixaMaster`;
+                                    const link = `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa-Mumbai`;
                                     navigator.clipboard.writeText(link);
                                     alert('Master VLESS Link copied!');
                                 }}
