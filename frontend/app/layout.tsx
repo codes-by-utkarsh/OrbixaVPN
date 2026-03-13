@@ -8,10 +8,6 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
     title: 'Orbixa VPN | Secure, Private, Borderless',
     description: 'The next generation of privacy. Experience lightning fast connections with our VLESS-powered global network.',
-    icons: {
-        icon: '/logo.png',
-        apple: '/logo.png',
-    }
 };
 
 export default function RootLayout({
