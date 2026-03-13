@@ -49,8 +49,15 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                     # 1. Force install jq if missing
                     if ! command -v jq &> /dev/null; then sudo apt-get update && sudo apt-get install -y jq; fi
                     
-                    # 2. Add user and clean flows in one step, using a temporary file that ubuntu user can write to
-                    sudo jq --arg uuid "${userUuid}" 'del(.. | .flow?) | if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{"id": $uuid}] end' /usr/local/etc/xray/config.json > /tmp/xray_temp.json
+                    # 2. Add user and clean all flow entries from the entire config
+                    sudo jq --arg uuid "${userUuid}" '
+                        del(.. | .flow?) | 
+                        if .inbounds[0].settings.clients | any(.id == $uuid) then 
+                            . 
+                        else 
+                            .inbounds[0].settings.clients += [{"id": $uuid}] 
+                        end
+                    ' /usr/local/etc/xray/config.json > /tmp/xray_temp.json
                     
                     # 3. Move the file into place using sudo
                     sudo mv /tmp/xray_temp.json /usr/local/etc/xray/config.json
