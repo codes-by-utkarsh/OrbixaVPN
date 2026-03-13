@@ -15,8 +15,14 @@ router.post('/register', async (req, res) => {
         const user = new User({ email, password });
         await user.save();
 
-        // Background sync to VPN nodes
-        syncUserToNode(user.uuid as string).catch((err: any) => console.error('Delayed Sync Error:', err));
+        // Sync to VPN nodes immediately
+        try {
+            console.log(`Syncing new user ${user.email} to nodes...`);
+            await syncUserToNode(user.uuid as string);
+            console.log(`Initial sync successful for ${user.email}`);
+        } catch (syncErr) {
+            console.error('Registration Sync Error (Critical):', syncErr);
+        }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
         res.status(201).json({ token, user: { email: user.email, uuid: user.uuid, plan: user.plan } });
@@ -33,6 +39,9 @@ router.post('/login', async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+
+        // Background sync to ensure user is whitelisted
+        syncUserToNode(user.uuid as string).catch((err: any) => console.error('Login Sync Error:', err));
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
         res.json({ token, user: { email: user.email, uuid: user.uuid, plan: user.plan } });
