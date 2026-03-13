@@ -28,11 +28,12 @@ export default function LoginPage() {
                 localStorage.setItem('orbixa_token', data.token);
                 router.push('/dashboard');
             } else {
-                alert('Invalid credentials');
+                const data = await res.json().catch(() => ({ message: 'Unexpected server response' }));
+                alert(`Login Failed: ${data.message || 'Check your credentials'}`);
             }
-        } catch (err) {
-            console.error(err);
-            alert('Server error');
+        } catch (err: any) {
+            console.error('Login error:', err);
+            alert(`Network error: ${err.message || 'Cannot connect to server. Check if backend is awake.'}`);
         } finally {
             setLoading(false);
         }

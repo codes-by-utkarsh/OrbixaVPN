@@ -28,12 +28,12 @@ export default function RegisterPage() {
                 localStorage.setItem('orbixa_token', data.token);
                 router.push('/dashboard');
             } else {
-                const data = await res.json();
-                alert(data.message || 'Registration failed');
+                const data = await res.json().catch(() => ({ message: 'Unexpected server response' }));
+                alert(`Registration Failed: ${data.message || 'Check your details'}`);
             }
-        } catch (err) {
-            console.error(err);
-            alert('Server error');
+        } catch (err: any) {
+            console.error('Registration error:', err);
+            alert(`Network error: ${err.message || 'Cannot connect to server. Check if backend is awake.'}`);
         } finally {
             setLoading(false);
         }
