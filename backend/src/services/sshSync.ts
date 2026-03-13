@@ -1,6 +1,26 @@
 import { Client } from 'ssh2';
 import Server from '../models/Server';
 
+const normalizePrivateKey = (key: string) => {
+    if (!key) return undefined;
+
+    // Step 1: Replace literal "\n" strings with actual newlines
+    let normalized = key.replace(/\\n/g, '\n').trim();
+
+    // Step 2: If it's a single line but contains the standard headers, we need to re-wrap it
+    if (!normalized.includes('\n') && normalized.startsWith('-----')) {
+        const match = normalized.match(/(-----BEGIN [^-]+-----)(.*?)(-----END [^-]+-----)/);
+        if (match) {
+            const [_, header, content, footer] = match;
+            // Re-wrap the base64 content every 64 characters
+            const wrappedContent = content.trim().match(/.{1,64}/g)?.join('\n');
+            normalized = `${header}\n${wrappedContent}\n${footer}`;
+        }
+    }
+
+    return normalized;
+};
+
 export const syncUserToNode = (userUuid: string): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -12,6 +32,7 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 return resolve(); // Resolve but warn
             }
 
+            const pKey = server.sshKey ? normalizePrivateKey(server.sshKey as string) : undefined;
             console.log(`Connecting to SSH: ${server.sshUser}@${server.sshHost}`);
             const conn = new Client();
 
@@ -27,7 +48,6 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                         return reject(err);
                     }
 
-                    let stdout = '';
                     let stderr = '';
 
                     stream.on('close', (code: number) => {
@@ -39,7 +59,7 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                             reject(new Error(`Command failed with code ${code}: ${stderr}`));
                         }
                     }).on('data', (data: any) => {
-                        stdout += data;
+                        // stdout ignored for success
                     }).stderr.on('data', (data: any) => {
                         stderr += data;
                     });
@@ -52,8 +72,8 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 port: 22,
                 username: server.sshUser || 'ubuntu',
                 password: server.sshPassword as any,
-                privateKey: server.sshKey ? server.sshKey.replace(/\\n/g, '\n').trim() : undefined,
-                readyTimeout: 20000 // 20 seconds timeout
+                privateKey: pKey,
+                readyTimeout: 30000
             });
 
         } catch (err) {
