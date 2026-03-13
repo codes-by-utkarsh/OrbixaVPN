@@ -23,11 +23,11 @@ app.get('/health', (req, res) => {
 });
 
 // Database Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/orbixa';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/orbixa';
 
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGO_URI)
     .then(() => {
-        console.log('✅ Connected to MongoDB');
+        console.log('✅ Connected to MongoDB Atlas');
         app.listen(PORT, () => {
             console.log(`🚀 Orbixa Backend running on http://localhost:${PORT}`);
         });

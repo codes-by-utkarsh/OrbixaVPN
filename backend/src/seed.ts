@@ -21,9 +21,9 @@ const servers = [
 
 const seed = async () => {
     try {
-        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/orbixa';
-        await mongoose.connect(MONGODB_URI);
-        console.log('Connected to MongoDB for seeding');
+        const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/orbixa';
+        await mongoose.connect(MONGO_URI);
+        console.log('Connected to MongoDB Atlas for seeding');
 
         await Server.deleteMany({});
         await Server.insertMany(servers);

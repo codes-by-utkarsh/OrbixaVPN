@@ -1,17 +1,14 @@
-FROM maven:3.9-eclipse-temurin-17 AS build
+FROM node:20-slim AS builder
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
 
-COPY pom.xml .
-RUN mvn -B -q -e -DskipTests dependency:go-offline
-
-COPY src ./src
-RUN mvn -B -q -e -DskipTests package
-
-FROM eclipse-temurin:17-jre
+FROM node:20-slim
 WORKDIR /app
-
-COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
-
-EXPOSE 8080
-
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+COPY package*.json ./
+RUN npm install --omit=dev
+COPY --from=builder /app/dist ./dist
+EXPOSE 5000
+CMD ["npm", "start"]
