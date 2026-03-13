@@ -164,9 +164,21 @@ export default function Dashboard() {
                             </div>
                             <span className="text-gray-400 text-sm font-medium">Orbixa Node Key</span>
                         </div>
-                        <div className="flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border">
-                            <span className="text-[10px] font-mono text-gray-400 truncate w-32">{profile?.uuid || 'Loading...'}</span>
-                            <button className="text-primary hover:text-white"><Copy size={12} /></button>
+                        <div className="flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border group hover:border-primary/50 transition-all">
+                            <span className="text-[10px] font-mono text-primary-light truncate flex-1">
+                                {profile?.uuid ? `vless://${profile.uuid}@${servers[0]?.host || 'mumbai.orbixa.com'}:443?type=ws&security=tls&path=/orbixa#OrbixaMaster` : 'Generating Key...'}
+                            </span>
+                            <button
+                                onClick={() => {
+                                    if (!profile?.uuid) return;
+                                    const link = `vless://${profile.uuid}@${servers[0]?.host || 'mumbai.orbixa.com'}:443?type=ws&security=tls&path=/orbixa#OrbixaMaster`;
+                                    navigator.clipboard.writeText(link);
+                                    alert('Master VLESS Link copied!');
+                                }}
+                                className="text-primary hover:text-white transition-colors"
+                            >
+                                <Copy size={14} />
+                            </button>
                         </div>
                     </div>
                 </div>
