@@ -48,11 +48,18 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 const command = `
                     if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
                     sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
-                    sudo jq --arg uuid "${userUuid}" 'del(.. | .flow?) | if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{"id": $uuid}] end' /usr/local/etc/xray/config.json > /tmp/xray.json
-                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json
-                    sudo systemctl restart xray
+                    
+                    sudo bash -c "jq --arg uuid '${userUuid}' 'del(.. | .flow?) | if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{\\"id\\": $uuid}] end' /usr/local/etc/xray/config.json > /tmp/xray.json" && \
+                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
+                    sudo systemctl restart xray && \
+                    echo "STAGE_1_COMPLETE"
+                    
                     sleep 5
-                    sudo jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray.json && sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && sudo systemctl restart xray
+                    
+                    sudo bash -c "jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray.json" && \
+                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
+                    sudo systemctl restart xray && \
+                    echo "STAGE_2_COMPLETE"
                 `;
 
                 conn.exec(command, (err, stream) => {
