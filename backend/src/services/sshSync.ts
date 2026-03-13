@@ -46,20 +46,20 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 // Direct command logic to "Upsert" user WITHOUT breaking flow/ws compatibility
                 // It checks if ID exists; if yes, does nothing. If no, appends fresh client.
                 const command = `
-                    if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
-                    sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
+                    # 1. Force install jq if missing
+                    if ! command -v jq &> /dev/null; then sudo apt-get update && sudo apt-get install -y jq; fi
                     
-                    sudo bash -c "jq --arg uuid '${userUuid}' 'del(.. | .flow?) | if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{\\"id\\": $uuid}] end' /usr/local/etc/xray/config.json > /tmp/xray.json" && \
-                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
-                    sudo systemctl restart xray && \
-                    echo "STAGE_1_COMPLETE"
+                    # 2. Add user and clean flows in one step, using a temporary file that ubuntu user can write to
+                    sudo jq --arg uuid "${userUuid}" 'del(.. | .flow?) | if .inbounds[0].settings.clients | any(.id == $uuid) then . else .inbounds[0].settings.clients += [{"id": $uuid}] end' /usr/local/etc/xray/config.json > /tmp/xray_temp.json
                     
-                    sleep 5
+                    # 3. Move the file into place using sudo
+                    sudo mv /tmp/xray_temp.json /usr/local/etc/xray/config.json
                     
-                    sudo bash -c "jq 'del(.. | .flow?)' /usr/local/etc/xray/config.json > /tmp/xray.json" && \
-                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
-                    sudo systemctl restart xray && \
-                    echo "STAGE_2_COMPLETE"
+                    # 4. Restart services
+                    sudo systemctl restart xray
+                    
+                    # 5. Output success indicator
+                    echo "ORBIXA_SYNC_COMPLETE_FOR_${userUuid}"
                 `;
 
                 conn.exec(command, (err, stream) => {
