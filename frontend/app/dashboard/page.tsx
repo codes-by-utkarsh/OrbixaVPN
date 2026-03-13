@@ -249,12 +249,10 @@ export default function Dashboard() {
                                     <p className="text-gray-500 text-sm">Download **v2rayN-With-Core.zip** from GitHub. Import your Master Key above to connect.</p>
                                 </div>
                                 <a
-                                    href="https://github.com/2rayN/v2rayN/releases"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    href="https://github.com/2dust/v2rayN/releases/download/7.17.3/v2rayN-windows-64-desktop.zip"
                                     className="btn-primary w-full py-4 shadow-accent-glow flex items-center justify-center gap-2"
                                 >
-                                    <Download size={20} /> Get v2rayN
+                                    <Download size={20} /> Download v2rayN
                                 </a>
                                 <p className="text-[10px] text-gray-600 mt-2 italic">*Standalone Orbixa Client coming soon</p>
                             </div>
