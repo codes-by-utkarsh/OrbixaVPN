@@ -29,18 +29,25 @@ export default function Dashboard() {
         const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn.onrender.com/api';
 
         try {
-            // For now, using mock data for stability since we are focusing on UI
-            setProfile({ email: 'user@orbixa.com', uuid: '123e4567-e89b-12d3-a456-426614174000', plan: 'Pro' });
+            const profileRes = await fetch(`${api_url}/auth/profile`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (profileRes.ok) {
+                const data = await profileRes.json();
+                setProfile(data);
+            } else {
+                router.push('/login');
+            }
 
-            // Real fetch (commented for demo/mock)
-            /*
-            const profileRes = await fetch(`${api_url}/auth/profile`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (profileRes.ok) setProfile(await profileRes.json());
-            const usageRes = await fetch(`${api_url}/vpn/usage`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const usageRes = await fetch(`${api_url}/vpn/usage`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (usageRes.ok) setUsage(await usageRes.json());
-            const serversRes = await fetch(`${api_url}/vpn/servers`, { headers: { 'Authorization': `Bearer ${token}` } });
+
+            const serversRes = await fetch(`${api_url}/vpn/servers`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (serversRes.ok) setServers(await serversRes.json());
-            */
         } catch (err) {
             console.error(err);
         }
@@ -52,13 +59,22 @@ export default function Dashboard() {
 
     const handleConnect = async (serverId: string, serverName: string) => {
         setLoading(true);
-        // Simulate config generation
-        setTimeout(() => {
-            const mockUuid = profile?.uuid || '123e4567-e89b-12d3-a456-426614174000';
-            const mockLink = `vless://${mockUuid}@mumbai.orbixavpn.com:443?type=ws&security=tls&path=/orbixa#Orbixa-Mumbai`;
-            setSelectedConfig({ link: mockLink, serverName });
+        const token = localStorage.getItem('orbixa_token');
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+        try {
+            const res = await fetch(`${api_url}/vpn/config?serverId=${serverId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setSelectedConfig({ link: data.link, serverName });
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
             setLoading(false);
-        }, 800);
+        }
     };
 
     const copyToClipboard = () => {

@@ -14,11 +14,28 @@ export default function LoginPage() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            localStorage.setItem('orbixa_token', 'mock_token');
-            router.push('/dashboard');
-        }, 1500);
+        const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+        try {
+            const res = await fetch(`${api_url}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('orbixa_token', data.token);
+                router.push('/dashboard');
+            } else {
+                alert('Invalid credentials');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Server error');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

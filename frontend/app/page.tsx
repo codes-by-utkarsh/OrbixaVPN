@@ -48,45 +48,127 @@ export default function Home() {
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-32 bg-background relative overflow-hidden">
+            <section id="features" className="py-24 bg-background border-t border-border">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-24">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6">Why Choose Orbixa?</h2>
-                        <div className="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                        <span className="text-primary font-bold uppercase tracking-[0.4em] text-xs">Core Technology</span>
+                        <h2 className="text-4xl md:text-7xl font-bold tracking-tighter mt-4 italic">ADVANCED TUNNELING <br />RE-IMAGINED.</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Feature 1 */}
-                        <div className="premium-border p-10 bg-surface/30 rounded-3xl group">
-                            <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-8 border border-primary/20 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                                <Cpu className="text-primary group-hover:text-white" size={32} />
+                    <div className="space-y-40">
+                        {/* Feature 1: VLESS Engine */}
+                        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32">
+                            <div className="flex-1 space-y-8">
+                                <div className="inline-flex px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-bold uppercase tracking-widest">
+                                    Protocol Alpha
+                                </div>
+                                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">The Visionary <br /><span className="text-gradient">VLESS + Reality.</span></h3>
+                                <p className="text-gray-400 text-lg leading-relaxed">
+                                    We've moved beyond traditional VPN protocols like OpenVPN and WireGuard. Our proprietary VLESS implementation utilizes the <strong>Reality</strong> transport protocol, making your data streams indistinguishable from standard, secure web traffic.
+                                </p>
+                                <ul className="space-y-4">
+                                    {[
+                                        "DPI-Immune: Pass through the strictest firewalls.",
+                                        "Minimal Header Overhead: Faster handshake, lower latency.",
+                                        "Zero Fingerprint: No recognizable VPN 'signature'."
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-sm text-gray-300">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-glow"></div>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-                            <h3 className="text-2xl font-bold mb-4">VLESS Protocol</h3>
-                            <p className="text-gray-400 leading-relaxed">
-                                Beyond traditional encryption. Our VLESS + XTLS Reality implementation makes your VPN traffic look like ordinary web browsing.
-                            </p>
+                            <div className="flex-1 w-full aspect-square relative flex items-center justify-center">
+                                <div className="absolute inset-0 bg-primary/10 blur-[120px] rounded-full opacity-50"></div>
+                                <div className="premium-border bg-surface/30 p-8 rounded-[3rem] w-full h-full flex flex-col items-center justify-center text-center relative overflow-hidden group">
+                                    <Cpu size={120} className="text-primary mb-8 group-hover:scale-110 transition-transform duration-500 opacity-50" />
+                                    <div className="space-y-2 font-mono text-[10px] text-primary/50">
+                                        <p>Handshaking: OK</p>
+                                        <p>Encryption: Reality/TLS</p>
+                                        <p>Tunnel: Transparent</p>
+                                    </div>
+                                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Feature 2 */}
-                        <div className="premium-border p-10 bg-surface/30 rounded-3xl group">
-                            <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-8 border border-accent/20 group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
-                                <Shield className="text-accent group-hover:text-white" size={32} />
+                        {/* Feature 2: RAM-Only Infrastructure */}
+                        <div className="flex flex-col lg:flex-row-reverse items-center gap-16 lg:gap-32">
+                            <div className="flex-1 space-y-8">
+                                <div className="inline-flex px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono font-bold uppercase tracking-widest">
+                                    Privacy Core
+                                </div>
+                                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Total Volatility <br /><span className="text-gradient from-red-500 to-orange-500">Zero-Log Identity.</span></h3>
+                                <p className="text-gray-400 text-lg leading-relaxed">
+                                    Your digital footprint ends where our servers begin. We operate a massive network of <strong>RAM-only nodes</strong> that reboot every 24 hours, ensuring that no user data ever survives a cycle.
+                                </p>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 bg-surface/20 border border-border rounded-2xl">
+                                        <p className="text-xs text-gray-500 font-bold uppercase mb-1">State</p>
+                                        <p className="text-red-500 font-mono text-sm uppercase">Transient</p>
+                                    </div>
+                                    <div className="p-4 bg-surface/20 border border-border rounded-2xl">
+                                        <p className="text-xs text-gray-500 font-bold uppercase mb-1">Method</p>
+                                        <p className="text-white font-mono text-sm uppercase">Encrypted RAM</p>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 className="text-2xl font-bold mb-4">Zero Log Policy</h3>
-                            <p className="text-gray-400 leading-relaxed">
-                                Your data is yours. We operate on RAM-only servers, ensuring that no connection metadata or activity logs are ever stored.
-                            </p>
+                            <div className="flex-1 w-full aspect-square relative flex items-center justify-center">
+                                <div className="absolute inset-0 bg-red-500/10 blur-[120px] rounded-full opacity-50"></div>
+                                <div className="premium-border bg-surface/30 p-12 rounded-[3rem] w-full h-full flex flex-col items-center justify-center relative overflow-hidden group">
+                                    <Shield size={120} className="text-red-400 mb-8 animate-pulse-slow opacity-50" />
+                                    <div className="w-full space-y-4">
+                                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                            <div className="h-full bg-red-500 w-[70%]" />
+                                        </div>
+                                        <div className="flex justify-between text-[10px] font-mono text-gray-500">
+                                            <span>RAM USAGE</span>
+                                            <span>VOLATILE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Feature 3 */}
-                        <div className="premium-border p-10 bg-surface/30 rounded-3xl group">
-                            <div className="w-14 h-14 bg-primary-light/10 rounded-2xl flex items-center justify-center mb-8 border border-primary-light/20 group-hover:bg-primary-light group-hover:scale-110 transition-all duration-300">
-                                <Globe className="text-primary-light group-hover:text-white" size={32} />
+                        {/* Feature 3: Global Mesh */}
+                        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32">
+                            <div className="flex-1 space-y-8">
+                                <div className="inline-flex px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-mono font-bold uppercase tracking-widest">
+                                    Network Grid
+                                </div>
+                                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">The Global Mesh <br /><span className="text-gradient">No-Latency Backbone.</span></h3>
+                                <p className="text-gray-400 text-lg leading-relaxed">
+                                    Orbixa doesn't rent standard server space. We own our hardware on premium peering lines across 30+ countries. This guarantees high bandwidth and 99.9% uptime for gamers and streamers alike.
+                                </p>
+                                <div className="flex items-center gap-6">
+                                    <div className="text-center">
+                                        <p className="text-2xl font-bold text-white">100+</p>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Active Nodes</p>
+                                    </div>
+                                    <div className="w-[1px] h-10 bg-border" />
+                                    <div className="text-center">
+                                        <p className="text-2xl font-bold text-white">10Gbps</p>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Line Speed</p>
+                                    </div>
+                                    <div className="w-[1px] h-10 bg-border" />
+                                    <div className="text-center">
+                                        <p className="text-2xl font-bold text-accent">99.9%</p>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">SLA Uptime</p>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 className="text-2xl font-bold mb-4">Global Backbone</h3>
-                            <p className="text-gray-400 leading-relaxed">
-                                Access 100+ high-speed nodes across 30 countries. Optimized for streaming, gaming, and unrestricted browsing.
-                            </p>
+                            <div className="flex-1 w-full aspect-square relative flex items-center justify-center">
+                                <div className="absolute inset-0 bg-accent/10 blur-[120px] rounded-full opacity-50"></div>
+                                <div className="premium-border bg-surface/30 p-12 rounded-[3rem] w-full h-full flex flex-col items-center justify-center relative overflow-hidden group">
+                                    <Globe size={120} className="text-accent mb-8 group-hover:rotate-12 transition-transform duration-500 opacity-50" />
+                                    <div className="grid grid-cols-4 gap-2 w-full">
+                                        {[...Array(8)].map((_, i) => (
+                                            <div key={i} className={`h-8 rounded-lg bg-accent/${(i + 1) * 10} border border-accent/20`} />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
