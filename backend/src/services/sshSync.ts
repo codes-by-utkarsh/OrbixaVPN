@@ -19,10 +19,27 @@ const normalizePrivateKey = (key: string) => {
 export const syncUserToNode = (userUuid: string): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         try {
-            const server = await Server.findOne({ status: 'online' });
-            if (!server || !server.sshHost) return resolve();
+            const server = await Server.findOne({ status: 'online' }).select('+sshKey +sshPassword');
 
-            const pKey = server.sshKey ? normalizePrivateKey(server.sshKey as string) : undefined;
+            if (!server) {
+                console.error('❌ SSH Sync: No server found with status "online"');
+                return resolve();
+            }
+
+            if (!server.sshHost || !server.sshUser) {
+                console.error(`❌ SSH Sync: Server ${server.name} is missing sshHost or sshUser`);
+                return resolve();
+            }
+
+            const sshKeyContent = (server.sshKey as string) || '';
+
+            if (!sshKeyContent || sshKeyContent === 'PASTE_PEM_CONTENT_HERE') {
+                console.error(`❌ SSH Sync: Server ${server.name} has no valid SSH Key (using placeholder or empty)`);
+                return reject(new Error('SSH Key is empty or placeholder. Please update it in MongoDB Atlas.'));
+            }
+
+            const pKey = normalizePrivateKey(sshKeyContent);
+            console.log(`📡 Connecting to SSH: ${server.sshUser}@${server.sshHost}...`);
             const conn = new Client();
 
             conn.on('ready', () => {
