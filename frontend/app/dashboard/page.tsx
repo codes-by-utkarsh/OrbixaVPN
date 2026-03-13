@@ -14,7 +14,6 @@ export default function Dashboard() {
     const [servers, setServers] = useState<any[]>([
         { id: '1', name: 'Orbixa-Mumbai-01', location: 'Mumbai, India', status: 'online', ping: '24ms', load: '12%' }
     ]);
-    const [selectedConfig, setSelectedConfig] = useState<{ link: string, serverName: string } | null>(null);
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -57,29 +56,11 @@ export default function Dashboard() {
         fetchDashboardData();
     }, []);
 
-    const handleConnect = async (serverId: string, serverName: string) => {
-        setLoading(true);
-        const token = localStorage.getItem('orbixa_token');
-        const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://orbixavpn-working.onrender.com/api';
-
-        try {
-            const res = await fetch(`${api_url}/vpn/config?serverId=${serverId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setSelectedConfig({ link: data.link, serverName });
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const copyToClipboard = () => {
-        if (selectedConfig) {
-            navigator.clipboard.writeText(selectedConfig.link);
+        if (profile?.uuid) {
+            const locationPart = (servers[0]?.location || 'Mumbai').split(',')[0].trim().replace(/\s+/g, '-');
+            const link = `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa-${locationPart}`;
+            navigator.clipboard.writeText(link);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
@@ -199,24 +180,19 @@ export default function Dashboard() {
                                 {profile?.uuid ? `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa-${(servers[0]?.location || 'Mumbai').split(',')[0].trim().replace(/\s+/g, '-')}` : 'Generating Key...'}
                             </span>
                             <button
-                                onClick={() => {
-                                    if (!profile?.uuid) return;
-                                    const locationPart = (servers[0]?.location || 'Mumbai').split(',')[0].trim().replace(/\s+/g, '-');
-                                    const link = `vless://${profile.uuid}@${servers[0]?.host || 'in1.orbixa.0xutkarsh.tech'}:443?type=ws&security=tls&path=/orbixa#Orbixa-${locationPart}`;
-                                    navigator.clipboard.writeText(link);
-                                    alert('Master VLESS Link copied!');
-                                }}
-                                className="text-primary hover:text-white transition-colors"
+                                onClick={copyToClipboard}
+                                className="text-primary hover:text-white transition-colors p-1"
+                                title="Copy Master Key"
                             >
-                                <Copy size={14} />
+                                {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Server List */}
-                    <div className="lg:col-span-2 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    {/* Server List - Wider layout since sidebar is gone */}
+                    <div className="lg:col-span-3 space-y-6">
                         <div className="flex items-center justify-between">
                             <h3 className="text-2xl font-bold flex items-center gap-3">
                                 <Globe className="text-primary" /> Active Nodes
@@ -243,90 +219,34 @@ export default function Dashboard() {
                                     </div>
 
                                     <div className="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
-                                        <div className="hidden sm:flex flex-col items-end">
+                                        <div className="flex flex-col items-end">
                                             <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest whitespace-nowrap">Latency</span>
                                             <span className="text-primary-light font-bold">{server.ping}</span>
                                         </div>
-                                        <div className="hidden sm:flex flex-col items-end">
+                                        <div className="flex flex-col items-end">
                                             <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest whitespace-nowrap">Load</span>
                                             <span className="text-white font-bold">{server.load}</span>
                                         </div>
-                                        <button
-                                            onClick={() => handleConnect(server._id, server.location)}
-                                            disabled={loading}
-                                            className="btn-primary py-3 px-8 text-sm whitespace-nowrap hover:shadow-glow"
-                                        >
-                                            {loading ? <RefreshCcw size={18} className="animate-spin" /> : "Get Config"}
-                                        </button>
+                                        <div className="p-3 bg-primary/5 rounded-xl border border-primary/10">
+                                            <Zap size={20} className="text-primary" />
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    {/* Quick Access Sidebar */}
+                    {/* Simple Sidebar with Download Only */}
                     <div className="space-y-8">
-                        {/* Config Output Box */}
-                        <div className="premium-border bg-background p-8 rounded-3xl relative overflow-hidden min-h-[350px] flex flex-col">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full"></div>
-
-                            {!selectedConfig ? (
-                                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
-                                    <div className="w-20 h-20 bg-surface border border-border rounded-2xl flex items-center justify-center overflow-hidden p-2">
-                                        <img src="/logo.png" alt="Orbixa" className="w-full h-full object-cover rounded-lg opacity-50" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xl font-bold mb-2">Ready to Secure</h4>
-                                        <p className="text-gray-500 text-sm">Select a server to generate your professional VLESS authentication string.</p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex-1 flex flex-col h-full animate-in fade-in duration-500">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <h4 className="font-bold text-gray-300 uppercase tracking-widest text-xs">Generated Config</h4>
-                                        <button onClick={() => setSelectedConfig(null)} className="text-red-400 hover:text-red-300 text-[10px] font-bold uppercase tracking-widest">Clear</button>
-                                    </div>
-
-                                    <div className="bg-surface border border-border rounded-2xl p-5 mb-8 relative group cursor-pointer overflow-hidden" onClick={copyToClipboard}>
-                                        <p className="text-[11px] font-mono text-primary-light break-all leading-relaxed line-clamp-4">
-                                            {selectedConfig.link}
-                                        </p>
-                                        <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
-                                            <span className="bg-primary text-black px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2">
-                                                {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? 'COPIED' : 'CLICK TO COPY'}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <h5 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]">Deployment Steps:</h5>
-                                        <div className="space-y-3">
-                                            {[
-                                                "Copy the URI above",
-                                                "Open Orbixa for Windows/Android",
-                                                "Import from Clipboard",
-                                                "Initiate Secure Connection"
-                                            ].map((step, i) => (
-                                                <div key={i} className="flex gap-3">
-                                                    <span className="text-primary font-bold">{i + 1}.</span>
-                                                    <span className="text-gray-400 text-xs">{step}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
                         {/* Download App Box */}
                         <div className="bg-primary p-1 rounded-3xl shadow-glow">
                             <div className="bg-surface rounded-[calc(1.5rem-2px)] p-8 text-center space-y-6">
                                 <div className="inline-flex p-4 bg-primary/10 rounded-2xl">
                                     <HardDrive className="text-primary" size={40} />
                                 </div>
-                                <div>
+                                <div className="text-center">
                                     <h4 className="text-2xl font-bold mb-2">Desktop Client</h4>
-                                    <p className="text-gray-500 text-sm">Download our native Windows executable for maximum performance.</p>
+                                    <p className="text-gray-500 text-sm">Download for Windows executable for maximum performance.</p>
                                 </div>
                                 <a
                                     href="/orbixa-desktop Setup 1.0.0.exe"

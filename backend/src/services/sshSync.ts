@@ -48,9 +48,9 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                         conn.end();
                         if (code === 0) resolve();
                         else reject(new Error(`SSH Command failed with code ${code}`));
-                    }).on('data', (data) => {
+                    }).on('data', (data: any) => {
                         console.log(`SSH Stdout: ${data}`);
-                    }).stderr.on('data', (d) => {
+                    }).stderr.on('data', (d: any) => {
                         console.error(`SSH Stderr: ${d}`);
                     });
                 });
