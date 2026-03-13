@@ -49,7 +49,7 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                     if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
                     sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
                     sudo jq --arg uuid "${userUuid}" '
-                        (.inbounds[0].settings.clients |= map(del(.flow))) |
+                        del(.. | .flow?) | 
                         if .inbounds[0].settings.clients | any(.id == $uuid) 
                         then . 
                         else .inbounds[0].settings.clients += [{"id": $uuid}] 
