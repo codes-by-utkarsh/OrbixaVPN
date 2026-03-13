@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+    --color-background: #0a0a0c;
+    --color-surface: #16161a;
+    --color-primary: #00f2ff;
+    --color-secondary: #0066ff;
+    --color-text: #ffffff;
+    --color-muted: #94a3b8;
+
+    --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --animate-glow: glow 2s ease-in-out infinite alternate;
+
+    @keyframes glow {
+        0% {
+            box-shadow: 0 0 5px #00f2ff, 0 0 10px #00f2ff;
+        }
+
+        100% {
+            box-shadow: 0 0 20px #00f2ff, 0 0 40px #00f2ff;
+        }
+    }
+}
+
+:root {
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: dark;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: #0a0a0c;
+    color: white;
+    overflow: hidden;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glow-btn:hover {
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+* {
+    user-select: none;
+    cursor: default;
+}
+
+input {
+    cursor: text;
+}
+
+button {
+    cursor: pointer;
+}
