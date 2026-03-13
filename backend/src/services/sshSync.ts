@@ -52,7 +52,7 @@ export const syncUserToNode = (userUuid: string): Promise<void> => {
                 port: 22,
                 username: server.sshUser || 'ubuntu',
                 password: server.sshPassword as any,
-                privateKey: server.sshKey ? server.sshKey.replace(/\\n/g, '\n') : undefined,
+                privateKey: server.sshKey ? server.sshKey.replace(/\\n/g, '\n').trim() : undefined,
                 readyTimeout: 20000 // 20 seconds timeout
             });
 
