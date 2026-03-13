@@ -33,8 +33,8 @@ export const syncUserToNode = async (userUuid: string) => {
             host: server.sshHost,
             port: 22,
             username: server.sshUser || 'ubuntu',
-            password: server.sshPassword as any // Using password for now as per user request context
-            // In premium setups, you'd use direct privateKey: fs.readFileSync('path/to/key')
+            password: server.sshPassword as any,
+            privateKey: server.sshKey ? server.sshKey.replace(/\\n/g, '\n') : undefined
         });
 
     } catch (err) {

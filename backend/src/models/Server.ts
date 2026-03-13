@@ -14,6 +14,7 @@ const serverSchema = new mongoose.Schema({
     sshHost: { type: String }, // For remote management
     sshUser: { type: String },
     sshPassword: { type: String },
+    sshKey: { type: String }, // For .pem key orientation
 });
 
 export default mongoose.model('Server', serverSchema);
