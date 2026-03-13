@@ -3,87 +3,58 @@ import Server from '../models/Server';
 
 const normalizePrivateKey = (key: string) => {
     if (!key) return undefined;
-
-    // Step 1: Clean basic whitespace and handle literal "\n" strings
     let cleaned = key.replace(/\\n/g, '\n').trim();
-
-    // Step 2: Extract the actual key content if it's wrapped in headers
-    // This handles cases where the key is one long line with headers but no internal newlines
     if (cleaned.startsWith('-----BEGIN') && !cleaned.includes('\n', 30)) {
         const headerMatch = cleaned.match(/^(-----BEGIN [^-]+-----)(.*)(-----END [^-]+-----)$/);
         if (headerMatch) {
             const [_, header, body, footer] = headerMatch;
-            // Clean the body of any remaining whitespace or weird characters
             const cleanBody = body.replace(/\s/g, '');
-            // Wrap the body at 64 chars
             const wrappedBody = cleanBody.match(/.{1,64}/g)?.join('\n');
             return `${header}\n${wrappedBody}\n${footer}\n`;
         }
     }
-
-    // Step 3: Ensure it ends with a newline
     return cleaned.endsWith('\n') ? cleaned : cleaned + '\n';
 };
 
 export const syncUserToNode = (userUuid: string): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(`Starting SSH sync for user: ${userUuid}`);
             const server = await Server.findOne({ status: 'online' });
+            if (!server || !server.sshHost) return resolve();
 
-            if (!server || !server.sshHost) {
-                console.warn('SSH Sync: No active server with credentials found in DB.');
-                return resolve();
-            }
-
-            const sshKeyContent = (server.sshKey as string) || '';
-            const pKey = sshKeyContent ? normalizePrivateKey(sshKeyContent) : undefined;
-
-            console.log(`Connecting to SSH: ${server.sshUser}@${server.sshHost}`);
+            const pKey = server.sshKey ? normalizePrivateKey(server.sshKey as string) : undefined;
             const conn = new Client();
 
             conn.on('ready', () => {
-                console.log('✅ SSH Connection established');
-                const command = `sudo /usr/local/bin/add_user.sh ${userUuid}`;
+                // Direct command logic to "Upsert" user WITHOUT breaking flow/ws compatibility
+                // It checks if ID exists; if yes, does nothing. If no, appends fresh client.
+                const command = `
+                    if ! command -v jq &> /dev/null; then sudo apt update && sudo apt install -y jq; fi
+                    sudo cp /usr/local/etc/xray/config.json /usr/local/etc/xray/config.json.bak
+                    sudo jq --arg uuid "${userUuid}" '
+                        if .inbounds[0].settings.clients | any(.id == $uuid) 
+                        then . 
+                        else .inbounds[0].settings.clients += [{"id": $uuid}] 
+                        end
+                    ' /usr/local/etc/xray/config.json > /tmp/xray.json && \
+                    sudo mv /tmp/xray.json /usr/local/etc/xray/config.json && \
+                    sudo systemctl restart xray
+                `;
 
                 conn.exec(command, (err, stream) => {
-                    if (err) {
-                        console.error('SSH Exec Error:', err);
-                        conn.end();
-                        return reject(err);
-                    }
-
-                    let stdout = '';
-                    let stderr = '';
-
+                    if (err) { conn.end(); return reject(err); }
                     stream.on('close', (code: number) => {
-                        console.log(`SSH Command stdout: ${stdout}`);
-                        console.log(`SSH Command stderr: ${stderr}`);
-                        console.log(`SSH Command exited with code ${code}`);
                         conn.end();
                         if (code === 0) resolve();
-                        else reject(new Error(`Script failed (code ${code}): ${stderr}`));
-                    }).on('data', (data: any) => {
-                        stdout += data;
-                    }).stderr.on('data', (data: any) => {
-                        stderr += data;
-                    });
+                        else reject(new Error(`SSH Command failed with code ${code}`));
+                    }).on('data', () => { }).stderr.on('data', (d) => console.error(`SSH Stderr: ${d}`));
                 });
-            }).on('error', (err) => {
-                console.error('❌ SSH Connection Error:', err);
-                reject(err);
-            }).connect({
+            }).on('error', (err) => reject(err)).connect({
                 host: server.sshHost,
-                port: 22,
                 username: server.sshUser || 'ubuntu',
-                password: (server.sshPassword as any) || undefined,
                 privateKey: pKey,
                 readyTimeout: 30000
             });
-
-        } catch (err) {
-            console.error('Fatal SSH Sync Error:', err);
-            reject(err);
-        }
+        } catch (err) { reject(err); }
     });
 };
